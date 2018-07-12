@@ -1,8 +1,8 @@
 {
-    "name": "crcms/user",
-    "description": "crcms user module",
-	"keywords": ["user", "crcms", "laravel", "php"],
-	"homepage": "https://github.com/crcms/user",
+    "name": "crcms/passport",
+    "description": "crcms single user authentication",
+	"keywords": ["passport", "crcms", "laravel", "php"],
+	"homepage": "https://github.com/crcms/passport",
     "license": "MIT",
     "type": "crcms-module",
     "require": {
