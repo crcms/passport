@@ -128,11 +128,4 @@ class LoginController extends Controller
             $this->username() => [Lang::get('passport::auth.throttle', ['seconds' => $seconds])],
         ])->status(423);
     }
-
-    public function logout(Request $request)
-    {
-        $this->guard()->logout();
-
-        return $this->response->noContent();
-    }
 }
