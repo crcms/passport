@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'verification_expire' => 10,
+    'domain' => 'passport.crcms.local',
+    'api_domain' => 'passport.api.crcms.local',
 ];
