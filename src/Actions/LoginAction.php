@@ -18,6 +18,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
@@ -34,6 +35,11 @@ class LoginAction implements ActionContract
      * @var Request
      */
     protected $request;
+
+    /**
+     * @var string
+     */
+    protected $guard;
 
     /**
      * LoginAction constructor.
@@ -75,6 +81,8 @@ class LoginAction implements ActionContract
      */
     public function handle(?Collection $collects = null): UserModel
     {
+        $this->guard = $collects->get('guard', 'api');
+
         $this->validateLogin($collects ? $collects->get('field') : []);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -136,5 +144,14 @@ class LoginAction implements ActionContract
         throw ValidationException::withMessages([
             'locked' => [Lang::get('passport::auth.throttle', ['seconds' => $seconds])],
         ])->status(423);
+    }
+
+    /**
+     * @param string $guard
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return Auth::guard($this->guard);
     }
 }

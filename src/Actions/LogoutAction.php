@@ -25,6 +25,7 @@ class LogoutAction implements ActionContract
      */
     public function handle(?Collection $collects = null)
     {
-        Auth::guard()->logout();
+        $guard = $collects->get('guard', 'api');
+        Auth::guard($guard)->logout();
     }
 }
