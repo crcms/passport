@@ -19,6 +19,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class RegisterAction
@@ -39,6 +40,11 @@ class RegisterAction implements ActionContract
     protected $repository;
 
     /**
+     * @var string
+     */
+    protected $guard;
+
+    /**
      * LoginAction constructor.
      * @param Request $request
      */
@@ -54,15 +60,41 @@ class RegisterAction implements ActionContract
      */
     public function handle(?Collection $collects = null)
     {
-        $this->validate($this->request, $this->request->all());
+        $this->guard = $collects ? $collects->get('guard', 'api') : null;
+        $fields = $collects ? $collects->get('fields', ['name', 'email', 'password']) : [];
 
-        $user = $this->repository->create(Arr::only($this->request->all(), $collects ? $collects->get('field') : []));
+        $this->validateRegister($fields);
+
+        $user = $this->repository->create($this->request->all());
 
         $this->registeredEvent($user);
 
         $this->guard()->login($user);
 
         return $user;
+    }
+
+    /**
+     * @param array $fields
+     */
+    protected function validateRegister(array $fields = [])
+    {
+        $this->validate($this->request, $this->validateRules($fields));
+    }
+
+    /**
+     * @param array $fields
+     * @return array
+     */
+    protected function validateRules(array $fields = [])
+    {
+        $all = [
+            'name' => 'required|string|max:15|unique:users',
+            'email' => 'required|string|email|max:50|unique:users',
+            'password' => 'required|string|min:6',
+        ];
+
+        return Arr::only($all, $fields ? $fields : $all);
     }
 
     /**
@@ -79,5 +111,13 @@ class RegisterAction implements ActionContract
                 'agent' => $this->request->userAgent(),
             ]
         ));
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return Auth::guard($this->guard);
     }
 }
