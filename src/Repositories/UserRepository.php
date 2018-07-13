@@ -34,39 +34,39 @@ class UserRepository extends AbstractRepository
     {
         return app(UserModel::class);
     }
-
-    /**
-     * @param UserModel $userModel
-     * @return array
-     */
-    public function getTokenInfoByUser(UserModel $userModel): array
-    {
-        $token = Auth::guard()->fromUser($userModel);
-
-        return [
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => Auth::guard()->factory()->getTTL() * 60
-        ];
-    }
-
-    /**
-     * @param UserModel $userModel
-     * @return \Illuminate\Database\Eloquent\Model|null|object|static
-     */
-    public function getRegisterInfo(UserModel $userModel)
-    {
-        return $userModel->hasManyAuthInfo()
-            ->where('type', UserAttribute::AUTH_TYPE_REGISTER)->first();
-    }
-
-    /**
-     * @param UserModel $userModel
-     * @return Collection
-     */
-    public function getLoginInfo(UserModel $userModel): Collection
-    {
-        return $userModel->hasManyAuthInfo()
-            ->where('type', UserAttribute::AUTH_TYPE_LOGIN)->orderBy('created_at', 'desc')->get();
-    }
+//
+//    /**
+//     * @param UserModel $userModel
+//     * @return array
+//     */
+//    public function getTokenInfoByUser(UserModel $userModel): array
+//    {
+//        $token = Auth::guard()->fromUser($userModel);
+//
+//        return [
+//            'access_token' => $token,
+//            'token_type' => 'Bearer',
+//            'expires_in' => Auth::guard()->factory()->getTTL() * 60
+//        ];
+//    }
+//
+//    /**
+//     * @param UserModel $userModel
+//     * @return \Illuminate\Database\Eloquent\Model|null|object|static
+//     */
+//    public function getRegisterInfo(UserModel $userModel)
+//    {
+//        return $userModel->hasManyAuthInfo()
+//            ->where('type', UserAttribute::AUTH_TYPE_REGISTER)->first();
+//    }
+//
+//    /**
+//     * @param UserModel $userModel
+//     * @return Collection
+//     */
+//    public function getLoginInfo(UserModel $userModel): Collection
+//    {
+//        return $userModel->hasManyAuthInfo()
+//            ->where('type', UserAttribute::AUTH_TYPE_LOGIN)->orderBy('created_at', 'desc')->get();
+//    }
 }
