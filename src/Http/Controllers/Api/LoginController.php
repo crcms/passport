@@ -18,7 +18,7 @@ class LoginController extends Controller
     {
         return $this->response->array([
             'data' => [
-                'access_token' => Auth::guard()->fromUser($action->handle()),
+                'access_token' => Auth::guard()->fromUser($action->handle(collect(['guard' => 'api']))),
                 'token_type' => 'Bearer',
                 'expires_in' => Auth::guard()->factory()->getTTL() * 60
             ]
