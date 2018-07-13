@@ -15,6 +15,8 @@ use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Support\Facades\Event;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
+use Illuminate\Auth\AuthServiceProvider;
+use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
 
 /**
  * Class PassportServiceProvider
@@ -83,8 +85,8 @@ class PassportServiceProvider extends ModuleServiceProvider
             $this->basePath . 'config/auth.php', 'auth'
         );
 
-        $this->app->register(\Illuminate\Auth\AuthServiceProvider::class);
-        $this->app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
+        $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(LaravelServiceProvider::class);
     }
 }
