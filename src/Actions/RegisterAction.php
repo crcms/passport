@@ -10,15 +10,16 @@
 namespace CrCms\Passport\Actions;
 
 use CrCms\Foundation\App\Actions\ActionContract;
+use CrCms\Foundation\App\Actions\ActionTrait;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\RegisteredEvent;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Auth;
  */
 class RegisterAction implements ActionContract
 {
-    use RegistersUsers, ValidatesRequests;
+    use RegistersUsers, ValidatesRequests, ActionTrait;
 
     /**
      * @var Request
@@ -40,32 +41,32 @@ class RegisterAction implements ActionContract
     protected $repository;
 
     /**
-     * @var string
+     * @var Config
      */
-    protected $guard;
+    protected $config;
 
     /**
      * LoginAction constructor.
      * @param Request $request
      */
-    public function __construct(Request $request, UserRepository $repository)
+    public function __construct(Request $request, UserRepository $repository, Config $config)
     {
         $this->request = $request;
         $this->repository = $repository;
+        $this->config = $config;
     }
 
     /**
-     * @param Collection|null $collects
-     * @return bool|mixed
+     * @param array $data
+     * @return UserModel
      */
-    public function handle(?Collection $collects = null)
+    public function handle(array $data = [])
     {
-        $this->guard = $collects ? $collects->get('guard', 'api') : null;
-        $fields = $collects ? $collects->get('fields', ['name', 'email', 'password']) : [];
+        $this->resolveDefaults($data);
 
-        $this->validateRegister($fields);
+        $this->validateRegister();
 
-        $user = $this->repository->create($this->request->all());
+        $user = $this->repository->create(Arr::only($this->request->all(), $this->defaults['fields']));
 
         $this->registeredEvent($user);
 
@@ -75,18 +76,17 @@ class RegisterAction implements ActionContract
     }
 
     /**
-     * @param array $fields
+     *
      */
-    protected function validateRegister(array $fields = [])
+    protected function validateRegister(): void
     {
-        $this->validate($this->request, $this->validateRules($fields));
+        $this->validate($this->request, $this->validateRules());
     }
 
     /**
-     * @param array $fields
      * @return array
      */
-    protected function validateRules(array $fields = [])
+    protected function validateRules(): array
     {
         $all = [
             'name' => 'required|string|max:15|unique:users',
@@ -94,7 +94,7 @@ class RegisterAction implements ActionContract
             'password' => 'required|string|min:6',
         ];
 
-        return Arr::only($all, $fields ? $fields : $all);
+        return Arr::only($all, $this->defaults['fields']);
     }
 
     /**
@@ -118,6 +118,16 @@ class RegisterAction implements ActionContract
      */
     protected function guard()
     {
-        return Auth::guard($this->guard);
+        return Auth::guard($this->defaults['guard']);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    protected function resolveDefaults(array $data): void
+    {
+        $this->defaults['guard'] = $data['guard'] ?? $this->config->get('auth.defaults.guard');
+        $this->defaults['fields'] = $data['fields'] ?? ['name', 'email', 'password'];
     }
 }
