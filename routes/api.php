@@ -14,6 +14,6 @@ Route::domain(config('passport::api_domain'))
         Route::post('reset-password', 'ResetPasswordController@reset')->name('user.auth.reset_password.reset');
         Route::middleware('signed')->get('behavior-auth/{behavior_id}', 'BehaviorAuthController@getCertification')->name('user.auth.behavior_auth.get');
 
-        Route::middleware('auth:api')->get('logout', 'LogoutController@')->name('passport.logout.get');
+        Route::middleware('auth:api')->get('logout', 'LogoutController@logout')->name('passport.logout.get');
     });
 

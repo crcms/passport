@@ -10,8 +10,9 @@
 namespace CrCms\Passport\Actions;
 
 use CrCms\Foundation\App\Actions\ActionContract;
-use Illuminate\Support\Collection;
+use CrCms\Foundation\App\Actions\ActionTrait;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * Class LogoutAction
@@ -19,13 +20,39 @@ use Illuminate\Support\Facades\Auth;
  */
 class LogoutAction implements ActionContract
 {
+    use ActionTrait;
+
     /**
-     * @param Collection|null $collects
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * LogoutAction constructor.
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param array $data
+     * @return mixed|void
+     */
+    public function handle(array $data = [])
+    {
+        $this->resolveDefaults($data);
+
+        Auth::guard($this->defaults['guard'])->logout();
+    }
+
+    /**
+     * @param array $data
      * @return void
      */
-    public function handle(?Collection $collects = null)
+    protected function resolveDefaults(array $data): void
     {
-        $guard = $collects->get('guard', 'api');
-        Auth::guard($guard)->logout();
+        $this->defaults['guard'] = $data['guard'] ?? $this->config->get('auth.defaults.guard');
     }
 }

@@ -10,8 +10,7 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use CrCms\Passport\Actions\LogoutAction;
 
 /**
  * Class LogoutController
@@ -20,15 +19,12 @@ use Illuminate\Support\Facades\Auth;
 class LogoutController extends Controller
 {
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param LogoutAction $action
      */
-    public function getLogout(Request $request)
+    public function logout(LogoutAction $action)
     {
-        Auth::guard()->logout();
+        $action->handle();
 
-        $redirect = $request->input('_redirect');
-
-        return $redirect ? redirect($redirect, 301) : $this->response->noContent();
+        $this->response->noContent();
     }
 }
