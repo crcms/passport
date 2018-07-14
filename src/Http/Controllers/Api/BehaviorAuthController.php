@@ -21,7 +21,7 @@ class BehaviorAuthController extends Controller
      */
     public function getCertification(int $id, BehaviorAuthAction $action)
     {
-        if (!$action->handle(collect(['id' => $id]))) {
+        if (!$action->handle(['id' => $id])) {
             $this->response->errorUnauthorized();
         }
 
