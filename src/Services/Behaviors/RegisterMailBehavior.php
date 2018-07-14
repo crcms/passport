@@ -36,7 +36,7 @@ class RegisterMailBehavior extends AbstractBehavior implements BehaviorCreateCon
         ];
 
         $extensions['hash'] = Hash::make(implode('.', $extensions));
-        $extensions['redirect'] = 'auth.login';
+        $extensions['redirect'] = 'passport.login.post';
 
         $userBehavior = $this->userBehaviorRepository()->create([
             'user_id' => $this->user->id,
