@@ -25,7 +25,7 @@ class ForgotPasswordController extends Controller
      * @param $response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendResetLinkResponse( $response)
+    public function sendResetLinkResponse()
     {
         return $this->response->noContent();
     }

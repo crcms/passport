@@ -5,10 +5,12 @@ namespace CrCms\Passport\Http\Controllers\Api;
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Passport\Actions\LoginAction;
 use CrCms\Passport\Actions\TokenAction;
+use CrCms\Passport\Handlers\LoginHandler;
+use CrCms\Passport\Handlers\TokenHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class LoginController extends Controller
 {
@@ -19,11 +21,11 @@ class LoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
-    public function login(Request $request, LoginAction $action, TokenAction $tokenAction)
+    public function login(Request $request, LoginHandler $loginHandler, Config $config)
     {
-        $user = $action->handle();
+        $user = $loginHandler->handle();
 
-        $token = $this->token($tokenAction, $user);
+        $token = (new TokenHandler($user, $config))->handle();
 
         $redirect = $request->input('_redirect');
 
@@ -48,8 +50,8 @@ class LoginController extends Controller
      * @param UserModel $user
      * @return array
      */
-    protected function token(TokenAction $action, UserModel $user): array
+    /*protected function token(TokenHandler $handler, UserModel $user): array
     {
-        return $action->handle(['user' => $user]);
-    }
+        return $handler->handle();
+    }*/
 }

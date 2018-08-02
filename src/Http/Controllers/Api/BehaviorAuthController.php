@@ -10,22 +10,17 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use CrCms\Passport\Actions\BehaviorAuthAction;
+use CrCms\Passport\Handlers\BehaviorAuthHandler;
 
 class BehaviorAuthController extends Controller
 {
-    /**
-     * @param int $id
-     * @param BehaviorAuthAction $action
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getCertification(int $id, BehaviorAuthAction $action)
+    public function getCertification(BehaviorAuthHandler $handler, int $id)
     {
-        if (!$action->handle(['id' => $id])) {
+        if (!$handler->handle()) {
             $this->response->errorUnauthorized();
         }
 
-        $route = $action->getBehaviorService()->getUserBehavior()->extension->redirect ?? null;
+        $route = $handler->getBehaviorService()->getUserBehavior()->extension->redirect ?? null;
         return $this->response->data(['url' => $route ? route($route) : null]);
     }
 }
