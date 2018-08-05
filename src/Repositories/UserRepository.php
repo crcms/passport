@@ -10,11 +10,7 @@
 namespace CrCms\Passport\Repositories;
 
 use CrCms\Foundation\App\Repositories\AbstractRepository;
-use CrCms\Passport\Attributes\UserAttribute;
-use CrCms\Passport\Models\AuthInfoModel;
 use CrCms\Passport\Models\UserModel;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class UserRepository
@@ -34,6 +30,17 @@ class UserRepository extends AbstractRepository
     {
         return app(UserModel::class);
     }
+
+    /**
+     * @param UserModel $user
+     * @param array $data
+     * @return UserModel
+     */
+    public function saveToken(UserModel $user, array $data): UserModel
+    {
+        return $this->setGuard(['token', 'expires_in'])->update($data, $user->id);
+    }
+
 //
 //    /**
 //     * @param UserModel $userModel
