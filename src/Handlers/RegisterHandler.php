@@ -37,14 +37,20 @@ class RegisterHandler extends AbstractHandler
     protected $defaultFields = ['name', 'email', 'password'];
 
     /**
+     * @var LoginHandler
+     */
+    protected $login;
+
+    /**
      * LoginAction constructor.
      * @param Request $request
      */
-    public function __construct(Request $request, UserRepository $repository, Config $config)
+    public function __construct(Request $request, UserRepository $repository, Config $config, LoginHandler $login)
     {
         $this->request = $request;
         $this->repository = $repository;
         $this->config = $config;
+        $this->login = $login;
     }
 
     /**
@@ -58,9 +64,9 @@ class RegisterHandler extends AbstractHandler
 
         $this->registeredEvent($user);
 
-        $this->guard()->login($user);
-
-        return $user;
+        return $this->login->handle();
+        //$this->guard()->login($user);
+        //return $user;
     }
 
     /**
