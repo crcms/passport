@@ -39,7 +39,7 @@ class TokenHandler extends AbstractHandler
     public function handle(): array
     {
         return [
-            'access_token' => $this->guard()->fromUser($this->user),
+            'token' => $this->guard()->fromUser($this->user),
             'token_type' => 'Bearer',
             'expires_in' => $this->guard()->factory()->getTTL() * 60
         ];
