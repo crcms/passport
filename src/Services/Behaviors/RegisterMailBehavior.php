@@ -78,6 +78,6 @@ class RegisterMailBehavior extends AbstractBehavior implements BehaviorCreateCon
         $urlQuery['behavior_id'] = $this->userBehavior->id;
         $urlQuery['behavior_type'] = $this->userBehavior->type;
 
-        return URL::temporarySignedRoute('user.auth.behavior_auth.get', $this->userBehavior->extension->expired_at, $urlQuery);
+        return URL::temporarySignedRoute('passport.behavior_auth.get', $this->userBehavior->extension->expired_at, $urlQuery);
     }
 }
