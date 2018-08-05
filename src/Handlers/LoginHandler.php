@@ -13,6 +13,7 @@ use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
+use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -36,6 +37,11 @@ class LoginHandler extends AbstractHandler
      * @var Config
      */
     protected $config;
+
+    /**
+     * @var array
+     */
+    protected $defaultFields = ['name', 'password'];
 
     /**
      * LoginAction constructor.
@@ -68,7 +74,7 @@ class LoginHandler extends AbstractHandler
             'mobile' => 'required|mobile',
         ];
 
-        return Arr::only($all, ['name', 'password']);
+        return Arr::only($all, $this->defaultFields);
     }
 
     /**
@@ -138,7 +144,7 @@ class LoginHandler extends AbstractHandler
      */
     protected function authenticatedEvent(UserModel $user)
     {
-        event(new BehaviorCreatedEvent(
+        event(new LoginEvent(
             $user,
             UserAttribute::AUTH_TYPE_LOGIN,
             ['ip' => $this->request->ip(), 'agent' => $this->request->userAgent()]

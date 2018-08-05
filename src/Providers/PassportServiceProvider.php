@@ -5,9 +5,11 @@ namespace CrCms\Passport\Providers;
 use CrCms\Foundation\App\Providers\ModuleServiceProvider;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\ForgetPasswordEvent;
+use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Events\RegisteredEvent;
 use CrCms\Passport\Listeners\BehaviorCreatedListener;
 use CrCms\Passport\Listeners\ForgetPasswordMailListener;
+use CrCms\Passport\Listeners\LoginTokenListener;
 use CrCms\Passport\Listeners\RegisterMailListener;
 use CrCms\Passport\Listeners\Repositories\UserBehaviorListener;
 use CrCms\Passport\Listeners\Repositories\UserListener;
@@ -72,6 +74,9 @@ class PassportServiceProvider extends ModuleServiceProvider
         Event::listen(ForgetPasswordEvent::class, ForgetPasswordMailListener::class);
 
         Event::listen(BehaviorCreatedEvent::class, BehaviorCreatedListener::class);
+
+        Event::listen(LoginEvent::class, BehaviorCreatedListener::class);
+        Event::listen(LoginEvent::class, LoginTokenListener::class);
     }
 
     /**
