@@ -14,6 +14,11 @@ use CrCms\Passport\Handlers\BehaviorAuthHandler;
 
 class BehaviorAuthController extends Controller
 {
+    /**
+     * @param BehaviorAuthHandler $handler
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCertification(BehaviorAuthHandler $handler, int $id)
     {
         if (!$handler->handle()) {

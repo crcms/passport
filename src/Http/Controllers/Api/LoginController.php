@@ -2,6 +2,7 @@
 
 namespace CrCms\Passport\Http\Controllers\Api;
 
+use function CrCms\Foundation\App\Helpers\combination_url;
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Passport\Actions\LoginAction;
 use CrCms\Passport\Actions\TokenAction;
@@ -21,37 +22,25 @@ class LoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      */
-    public function login(Request $request, LoginHandler $loginHandler, Config $config)
+    public function postLogin(Request $request, LoginHandler $loginHandler, Config $config)
     {
         $user = $loginHandler->handle();
 
-        $token = (new TokenHandler($user, $config))->handle();
+        $token = $this->token($user);
 
         $redirect = $request->input('_redirect');
 
         return $redirect ?
-            $this->response->redirectTo($this->redirectUrl($redirect, $token)) :
+            $this->response->redirectTo(combination_url($redirect, $token)) :
             $this->response->data($token);
-    }
-
-    /**
-     * @param string $url
-     * @param array $token
-     * @return string
-     */
-    protected function redirectUrl(string $url, array $token)
-    {
-        $urlParams = http_build_query($token);
-        $joiner = strpos($url, '?') ? '&' : '?';
-        return $url . $joiner . $urlParams;
     }
 
     /**
      * @param UserModel $user
      * @return array
      */
-    /*protected function token(TokenHandler $handler, UserModel $user): array
+    protected function token(UserModel $user): array
     {
-        return $handler->handle();
-    }*/
+        return (new TokenHandler($user, app(Config::class)))->handle();
+    }
 }

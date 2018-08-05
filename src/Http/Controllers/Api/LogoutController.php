@@ -10,7 +10,7 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use CrCms\Passport\Actions\LogoutAction;
+use CrCms\Passport\Handlers\LogoutHandler;
 
 /**
  * Class LogoutController
@@ -19,11 +19,11 @@ use CrCms\Passport\Actions\LogoutAction;
 class LogoutController extends Controller
 {
     /**
-     * @param LogoutAction $action
+     * @param LogoutHandler $handler
      */
-    public function logout(LogoutAction $action)
+    public function getLogout(LogoutHandler $handler)
     {
-        $action->handle();
+        $handler->handle();
 
         $this->response->noContent();
     }
