@@ -15,11 +15,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 
 class LoginController extends Controller
 {
-    public function getLogin()
-    {
-        return view('passport::auth.login');
-    }
-
     /**
      * @param Request $request
      * @param LoginAction $action

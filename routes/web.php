@@ -1,13 +1,10 @@
 <?php
 
-//Route::get('test/{name?}','CrCms\Category\Http\Controllers\TestController@test')->name('test');
-//Route::post('test/{name?}','CrCms\Category\Http\Controllers\TestController@test')->name('test.post');
-//Route::any('chat', CrCms\Category\Http\Controllers\TestController::class);
+use Illuminate\Support\Facades\Route;
 
-Route::get('test',function (){
-    return 'fdasfdasfdasfsafsas';
-});
-
-
-
-
+Route::domain(config('passport::domain'))
+    ->namespace('CrCms\Passport\Http\Controllers')
+    ->group(function () {
+        Route::get('login', 'ViewController@getLogin');
+        Route::get('register', 'ViewController@getRegister');
+    });
