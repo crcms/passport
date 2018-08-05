@@ -38,7 +38,7 @@ class UserRepository extends AbstractRepository
      */
     public function saveToken(UserModel $user, array $data): UserModel
     {
-        return $this->setGuard(['token', 'expires_in'])->update($data, $user->id);
+        return $this->setGuard(['token', 'token_expired_at'])->update($data, $user->id);
     }
 
 //

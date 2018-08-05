@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('token', 512)->nullable()->comment('token');
             $table->string('remember_token', 150)->nullable()->comment('remember token');
             $table->ipAddress('register_ip')->nullable()->commnet('Register IpAddress');
-            $table->unsignedInteger('expires_in')->default(0)->comment('token过期时间');
+            $table->unsignedInteger('token_expired_at')->default(0)->comment('token过期时间');
 
             $table->unique('name');
             $table->unique('tel');

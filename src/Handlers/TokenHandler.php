@@ -13,6 +13,7 @@ use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TokenHandler extends AbstractHandler
 {
@@ -39,9 +40,8 @@ class TokenHandler extends AbstractHandler
     public function handle(): array
     {
         return [
-            'token' => $this->guard()->fromUser($this->user),
-            'token_type' => 'Bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
+            'token' => Hash::make($this->guard()->fromUser($this->user)),
+            'token_expired_at' => $this->guard()->factory()->getTTL() * 60
         ];
     }
 
