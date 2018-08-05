@@ -12,6 +12,11 @@ use Illuminate\Contracts\Config\Repository as Config;
 
 class RegisterController extends Controller
 {
+    public function getRegister()
+    {
+        return view('passport::auth.register');
+    }
+
     /**
      * @param Request $request
      * @param RegisterHandler $handler

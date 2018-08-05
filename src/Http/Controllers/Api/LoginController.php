@@ -15,6 +15,11 @@ use Illuminate\Contracts\Config\Repository as Config;
 
 class LoginController extends Controller
 {
+    public function getLogin()
+    {
+        return view('passport::auth.login');
+    }
+
     /**
      * @param Request $request
      * @param LoginAction $action
@@ -31,7 +36,7 @@ class LoginController extends Controller
         $redirect = $request->input('_redirect');
 
         return $redirect ?
-            $this->response->redirectTo(combination_url($redirect, $token)) :
+            $this->response->redirectTo(combination_url($redirect, $token), 301) :
             $this->response->data($token);
     }
 
