@@ -41,7 +41,7 @@ class LoginTokenListener
     {
         $tokens = (new TokenHandler($event->user, $this->config))->handle();
 
-        $this->userRepository()->saveToken($event->user, $tokens);
+        $this->userRepository()->storeLoginInfo($event->user, $tokens);
     }
 
     /**

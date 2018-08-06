@@ -12,6 +12,7 @@ namespace CrCms\Passport\Handlers;
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,6 +28,11 @@ class TokenHandler extends AbstractHandler
      */
     protected $user;
 
+    /**
+     * TokenHandler constructor.
+     * @param UserModel $user
+     * @param Config $config
+     */
     public function __construct(UserModel $user, Config $config)
     {
         $this->user = $user;
@@ -39,9 +45,12 @@ class TokenHandler extends AbstractHandler
      */
     public function handle(): array
     {
+        $token = $this->guard()->fromUser($this->user);
+
         return [
-            'token' => Hash::make($this->guard()->fromUser($this->user)),
-            'token_expired_at' => $this->guard()->factory()->getTTL() * 60
+            'token' => $token,
+            'ticket' => Hash::make($token),
+            'ticket_expired_at' => Carbon::now()->getTimestamp() + $this->guard()->factory()->getTTL() * 60
         ];
     }
 
