@@ -11,7 +11,7 @@ namespace CrCms\Passport\Http\Controllers\Api;
 
 use function CrCms\Foundation\App\Helpers\combination_url;
 use CrCms\Foundation\App\Services\ResponseFactory;
-use CrCms\Passport\Handlers\TokenHandler;
+use CrCms\Passport\Handlers\TicketHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -25,7 +25,7 @@ trait RedirectTrait
     /**
      * @param Request $request
      * @param ResponseFactory $response
-     * @param TokenHandler|null $token
+     * @param TicketHandler|null $token
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function redirect(Request $request, ResponseFactory $response, UserModel $user = null)
@@ -50,6 +50,6 @@ trait RedirectTrait
      */
     protected function token(UserModel $user): array
     {
-        return (new TokenHandler($user, app(Config::class)))->handle();
+        return (new TicketHandler($user, app(Config::class)))->handle();
     }
 }

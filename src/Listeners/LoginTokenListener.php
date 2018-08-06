@@ -10,7 +10,7 @@
 namespace CrCms\Passport\Listeners;
 
 use CrCms\Passport\Events\LoginEvent;
-use CrCms\Passport\Handlers\TokenHandler;
+use CrCms\Passport\Handlers\TicketHandler;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Contracts\Config\Repository as Config;
 
@@ -39,7 +39,7 @@ class LoginTokenListener
      */
     public function handle(LoginEvent $event)
     {
-        $tokens = (new TokenHandler($event->user, $this->config))->handle();
+        $tokens = (new TicketHandler($event->user, $this->config))->handle();
 
         $this->userRepository()->storeLoginInfo($event->user, $tokens);
     }

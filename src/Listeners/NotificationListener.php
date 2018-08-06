@@ -11,7 +11,7 @@ namespace CrCms\Passport\Listeners;
 
 use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Handlers\NotificationHandler;
-use CrCms\Passport\Handlers\TokenHandler;
+use CrCms\Passport\Handlers\TicketHandler;
 use Illuminate\Contracts\Config\Repository as Config;
 
 /**
@@ -25,7 +25,7 @@ class NotificationListener
      */
     public function handle(LoginEvent $event)
     {
-        $token = new TokenHandler($event->user, app(Config::class));
+        $token = new TicketHandler($event->user, app(Config::class));
         $data = array_merge($token->handle(), ['name' => $event->user->name]);
         $handler = new NotificationHandler($event->user, $event->data['_redirect'], $data);
         $handler->handle();

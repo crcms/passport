@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class TokenHandler extends AbstractHandler
+class TicketHandler extends AbstractHandler
 {
     /**
      * @var Config
@@ -30,7 +30,7 @@ class TokenHandler extends AbstractHandler
     protected $user;
 
     /**
-     * TokenHandler constructor.
+     * TicketHandler constructor.
      * @param UserModel $user
      * @param Config $config
      */
@@ -46,10 +46,7 @@ class TokenHandler extends AbstractHandler
      */
     public function handle(): array
     {
-        $token = $this->guard()->fromUser($this->user);
-
         return [
-            'token' => $token,
             'ticket' => base64_encode(Hash::make(now()->getTimestamp() . strval(Str::random(6)) . strval($this->user->id) . $this->user->password . $this->config->get('app.key'))),
             'ticket_expired_at' => Carbon::now()->getTimestamp() + $this->guard()->factory()->getTTL() * 60
         ];
