@@ -7,7 +7,6 @@ use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\ForgetPasswordEvent;
 use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Events\RegisteredEvent;
-use CrCms\Passport\Handlers\NotificationHandler;
 use CrCms\Passport\Listeners\BehaviorCreatedListener;
 use CrCms\Passport\Listeners\ForgetPasswordMailListener;
 use CrCms\Passport\Listeners\LoginTokenListener;
@@ -15,6 +14,7 @@ use CrCms\Passport\Listeners\NotificationListener;
 use CrCms\Passport\Listeners\RegisterMailListener;
 use CrCms\Passport\Listeners\Repositories\UserBehaviorListener;
 use CrCms\Passport\Listeners\Repositories\UserListener;
+use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Support\Facades\Event;
@@ -53,6 +53,8 @@ class PassportServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        config(['auth.providers.users.model' => UserModel::class]);
 
         $this->publishes([
             $this->basePath . 'config/auth.php' => config_path('auth.php'),
