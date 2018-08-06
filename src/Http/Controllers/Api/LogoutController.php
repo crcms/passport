@@ -11,6 +11,7 @@ namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Passport\Handlers\LogoutHandler;
+use Illuminate\Http\Request;
 
 /**
  * Class LogoutController
@@ -18,13 +19,15 @@ use CrCms\Passport\Handlers\LogoutHandler;
  */
 class LogoutController extends Controller
 {
-    /**
-     * @param LogoutHandler $handler
-     */
-    public function getLogout(LogoutHandler $handler)
-    {
-        $handler->handle();
+    use RedirectTrait;
 
-        $this->response->noContent();
+    /**
+     * @param Request $request
+     * @param LogoutHandler $handler
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function getLogout(Request $request, LogoutHandler $handler)
+    {
+        return $this->redirect($request, $this->response, $handler->handle());
     }
 }
