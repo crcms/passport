@@ -15,6 +15,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class TokenHandler extends AbstractHandler
 {
@@ -49,7 +50,7 @@ class TokenHandler extends AbstractHandler
 
         return [
             'token' => $token,
-            'ticket' => Hash::make($token),
+            'ticket' => base64_encode(Hash::make(now()->getTimestamp() . strval(Str::random(6)) . strval($this->user->id) . $this->user->password . $this->config->get('app.key'))),
             'ticket_expired_at' => Carbon::now()->getTimestamp() + $this->guard()->factory()->getTTL() * 60
         ];
     }
