@@ -91,10 +91,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     {
         parent::register();
 
-        $this->mergeConfigFrom(
-            $this->basePath . 'config/auth.php', 'auth'
-        );
-
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(LaravelServiceProvider::class);
