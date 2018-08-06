@@ -11,6 +11,7 @@ use CrCms\Passport\Handlers\NotificationHandler;
 use CrCms\Passport\Listeners\BehaviorCreatedListener;
 use CrCms\Passport\Listeners\ForgetPasswordMailListener;
 use CrCms\Passport\Listeners\LoginTokenListener;
+use CrCms\Passport\Listeners\NotificationListener;
 use CrCms\Passport\Listeners\RegisterMailListener;
 use CrCms\Passport\Listeners\Repositories\UserBehaviorListener;
 use CrCms\Passport\Listeners\Repositories\UserListener;
@@ -78,7 +79,7 @@ class PassportServiceProvider extends ModuleServiceProvider
 
         Event::listen(LoginEvent::class, BehaviorCreatedListener::class);
         Event::listen(LoginEvent::class, LoginTokenListener::class);
-        Event::listen(LoginEvent::class, NotificationHandler::class);
+        Event::listen(LoginEvent::class, NotificationListener::class);
     }
 
     /**

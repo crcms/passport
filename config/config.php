@@ -5,6 +5,6 @@ return [
     'api_domain' => '',//passport.api.crcms.local
 
     'hosts' => [
-        'host' => 'notify_url'
+        'http://crcms-module.local/passport'
     ]
 ];

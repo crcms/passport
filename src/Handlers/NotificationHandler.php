@@ -11,7 +11,7 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Passport\Models\UserModel;
-use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NotificationHandler
@@ -30,14 +30,21 @@ class NotificationHandler extends AbstractHandler
     protected $user;
 
     /**
+     * @var array
+     */
+    protected $data;
+
+    /**
      * NotificationHandler constructor.
      * @param UserModel $user
      * @param string $redirect
+     * @param array $data
      */
-    public function __construct(UserModel $user, string $redirect)
+    public function __construct(UserModel $user, string $redirect, array $data)
     {
         $this->user = $user;
         $this->redirect = $redirect;
+        $this->data = $data;
     }
 
     /**
@@ -46,33 +53,46 @@ class NotificationHandler extends AbstractHandler
     public function handle()
     {
         $host = parse_url($this->redirect, PHP_URL_HOST);
-        if ((bool)$notificationUrl = config("passport.hosts.{$host}")) {
+
+        if ((bool)$notificationUrl = $this->notifyUrl($host)) {
             $this->notify($notificationUrl);
         }
     }
 
     /**
-     * @param string $notificationUrl
+     * @param string $host
+     * @return string
      */
-    protected function notify(string $notificationUrl)
+    protected function notifyUrl(string $host): string
     {
-        $resource = curl_init();
-        curl_setopt_array($resource, [
-            CURLOPT_TIMEOUT => 0.5,
-            CURLOPT_URL => $notificationUrl,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $this->postData()
-        ]);
-        curl_exec($resource);
-        curl_close($resource);
+        foreach (config('passport.hosts') as $url) {
+            if (stripos($url, $host)) {
+                return $url;
+            }
+        }
+
+        return '';
     }
 
     /**
-     * @return array
+     * @param string $notificationUrl
      */
-    protected function postData(): array
+    protected function notify(string $notificationUrl): void
     {
-        $token = new TokenHandler($this->user, app(Config::class));
-        return array_merge($token->handle(), ['name' => $this->user->name]);
+        $resource = curl_init();
+        curl_setopt_array($resource, [
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_URL => $notificationUrl,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $this->data
+        ]);
+
+        $result = curl_exec($resource);
+
+        if (curl_errno($resource) !== 0) {
+            Log::warning("The {$notificationUrl} connection error", $this->data);
+        }
+dd($notificationUrl,$this->data);
+        curl_close($resource);
     }
 }
