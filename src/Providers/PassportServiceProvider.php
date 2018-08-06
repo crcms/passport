@@ -14,7 +14,6 @@ use CrCms\Passport\Listeners\NotificationListener;
 use CrCms\Passport\Listeners\RegisterMailListener;
 use CrCms\Passport\Listeners\Repositories\UserBehaviorListener;
 use CrCms\Passport\Listeners\Repositories\UserListener;
-use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Support\Facades\Event;
@@ -54,10 +53,7 @@ class PassportServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
 
-        config(['auth.providers.users.model' => UserModel::class]);
-
         $this->publishes([
-            $this->basePath . 'config/auth.php' => config_path('auth.php'),
             $this->basePath . 'config/config.php' => config_path("{$this->name}.php"),
             $this->basePath . 'resources/lang' => resource_path("lang/vendor/{$this->name}"),
         ]);
