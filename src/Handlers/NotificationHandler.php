@@ -92,7 +92,7 @@ class NotificationHandler extends AbstractHandler
         if (curl_errno($resource) !== 0) {
             Log::warning("The {$notificationUrl} connection error", $this->data);
         }
-dd($notificationUrl,$this->data);
+
         curl_close($resource);
     }
 }
