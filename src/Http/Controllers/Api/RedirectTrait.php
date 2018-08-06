@@ -14,7 +14,7 @@ use CrCms\Foundation\App\Services\ResponseFactory;
 use CrCms\Passport\Handlers\TokenHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Http\Request;
-use CrCms\Repository\Contracts\Repository as Config;
+use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * Trait RedirectTrait
