@@ -77,7 +77,7 @@ class PassportServiceProvider extends ModuleServiceProvider
 
         Event::listen(LoginEvent::class, BehaviorCreatedListener::class);
         Event::listen(LoginEvent::class, LoginTokenListener::class);
-        Event::listen(LoginEvent::class, NotificationListener::class);
+        //Event::listen(LoginEvent::class, NotificationListener::class);
     }
 
     /**
