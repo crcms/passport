@@ -54,8 +54,10 @@ class NotificationHandler extends AbstractHandler
     {
         $host = parse_url($this->redirect, PHP_URL_HOST);
 
-        if ((bool)$notificationUrl = $this->notifyUrl($host)) {
-            $this->notify($notificationUrl);
+        if ($host) {
+            if ((bool)$notificationUrl = $this->notifyUrl($host)) {
+                $this->notify($notificationUrl);
+            }
         }
     }
 

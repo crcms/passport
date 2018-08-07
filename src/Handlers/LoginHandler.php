@@ -147,7 +147,7 @@ class LoginHandler extends AbstractHandler
         event(new LoginEvent(
             $user,
             UserAttribute::AUTH_TYPE_LOGIN,
-            ['ip' => $this->request->ip(), 'agent' => $this->request->userAgent(), '_redirect' => $this->request->input('_redirect')]
+            ['ip' => $this->request->ip(), 'agent' => $this->request->userAgent(), '_redirect' => $this->request->input('_redirect', '')]
         ));
     }
 
