@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Controllers\Api')->group(function () {
 
     Route::post('register', 'RegisterController@postRegister')->name('passport.register.post');
-    Route::post('login', 'LoginController@postLogin')->name('passport.login.post');
+    Route::post('login', 'AuthController@postLogin')->name('passport.login.post');
 
     Route::post('forget-password', 'ForgotPasswordController@sendResetLinkEmail')->name('passport.forget_password.send_link_email.post');
     Route::post('reset-password-url', 'ForgotPasswordController@postResetPasswordUrl')->name('passport.forget_password.reset_password_url');
@@ -13,5 +13,14 @@ Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Con
     Route::middleware('signed')->get('behavior-auth/{behavior_id}', 'BehaviorAuthController@getCertification')->name('passport.behavior_auth.get');
 
     Route::middleware('auth:api')->get('logout', 'LogoutController@getLogout')->name('passport.logout.get');
+    Route::middleware('auth:api')->get('test',function(\Illuminate\Http\Request $request){
+        return \Illuminate\Support\Facades\Auth::user();
+    });
+
+
+
 });
 
+    Route::get('test',function(\Illuminate\Http\Request $request){
+        return 123;
+    });
