@@ -13,7 +13,7 @@ class UserBehaviors extends Migration
      */
     public function up()
     {
-        Schema::create('user_behaviors', function (Blueprint $table) {
+        Schema::create('passport_user_behaviors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->tinyInteger('type')->default(0)->comment('认证相关类型，1登录 2注册 3重置密码');
             $table->tinyInteger('status')->default(0)->comment('状态，1：成功，2：失败，3：未执行');
@@ -35,6 +35,6 @@ class UserBehaviors extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_behaviors');
+        Schema::dropIfExists('passport_user_behaviors');
     }
 }
