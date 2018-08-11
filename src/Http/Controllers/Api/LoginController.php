@@ -3,7 +3,9 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
+use CrCms\Passport\Handlers\CookieTokenCreateHandler;
 use CrCms\Passport\Handlers\LoginHandler;
+use CrCms\Passport\Handlers\JWTTokenHandler;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -19,6 +21,12 @@ class LoginController extends Controller
      */
     public function postLogin(Request $request, LoginHandler $handler)
     {
+        $user = $handler->handle();
+
+//        $cookie = (new CookieTokenCreateHandler($user))->handle();
+//
+//        $token = (new TokenHandler())
+
         return $this->redirect($request, $this->response, $handler->handle());
     }
 }

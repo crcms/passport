@@ -12,7 +12,6 @@ namespace CrCms\Passport\Handlers;
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Passport\Attributes\UserAttribute;
-use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -72,6 +71,7 @@ class LoginHandler extends AbstractHandler
             'email' => 'required|email|string',
             'password' => 'required|string',
             'mobile' => 'required|mobile',
+            //'application_id' => ['required', Rule::exists((new ApplicationModel())->getTable())]
         ];
 
         return Arr::only($all, $this->defaultFields);

@@ -45,6 +45,11 @@ class UserModel extends Authenticatable implements JWTSubject
     protected $guarded = [];
 
     /**
+     * @var array
+     */
+    protected $JWTCustomClaims = [];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -80,7 +85,17 @@ class UserModel extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return $this->JWTCustomClaims;
+    }
+
+    /**
+     * @param array $claims
+     * @return $this
+     */
+    public function setJWTCustomClaims(array $claims)
+    {
+        $this->JWTCustomClaims = $claims;
+        return $this;
     }
 
     /**

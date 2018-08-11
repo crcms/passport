@@ -10,6 +10,7 @@
 <body>
 <form action="{{route('passport.login.post')}}" method="post">
     <input type="hidden" name="_redirect" value="{{Request::input('_redirect')}}">
+    <input type="hidden" name="application_key" value="{{Request::input('application_key')}}">
     <input type="text" name="name">
     <br>
     <input type="password" name="password">
