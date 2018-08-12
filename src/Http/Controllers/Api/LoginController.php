@@ -3,7 +3,7 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use CrCms\Passport\Handlers\CookieTokenCreateHandler;
+use CrCms\Passport\Handlers\CookieTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\JWTTokenHandler;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class LoginController extends Controller
     {
         $user = $handler->handle();
 
-//        $cookie = (new CookieTokenCreateHandler($user))->handle();
+//        $cookie = (new CookieTokenHandler($user))->handle();
 //
 //        $token = (new TokenHandler())
 

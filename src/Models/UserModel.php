@@ -32,7 +32,7 @@ class UserModel extends Authenticatable implements JWTSubject
     /**
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'passport_users';
 
     /**
      * @var array

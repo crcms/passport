@@ -78,11 +78,11 @@ class LoginHandler extends AbstractHandler
     }
 
     /**
-     * @param Collection|null $collects
+     * @param mixed ...$params
      * @return UserModel
      * @throws ValidationException|UnauthorizedException
      */
-    public function handle(): UserModel
+    public function handle(...$params): UserModel
     {
         $this->validateLogin();
 

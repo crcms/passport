@@ -38,6 +38,13 @@ interface TokenContract
 
     /**
      * @param string $token
+     * @param ApplicationModel $application
+     * @return array
+     */
+    public function increase(string $token, ApplicationModel $application): array;
+
+    /**
+     * @param string $token
      * @return bool
      */
     public function delete(string $token): bool;

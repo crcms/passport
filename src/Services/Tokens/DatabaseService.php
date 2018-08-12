@@ -63,12 +63,29 @@ class DatabaseService implements TokenContract
     public function create(UserModel $user, ApplicationModel $application): array
     {
         $model = $this->repository->create([
-           'token' => Str::random(10).'-'.$user->id.'-'.strval($application->id).'-'.Str::random(6),
-           //有效期暂时为1天，后期配置，还要增加refresh token次数
-           'expired_at' => Carbon::now()->addDay(1)->getTimestamp(),
-           'app_key' => $application->app_key,
+            'token' => Str::random(10) . '-' . $user->id . '-' . strval($application->id) . '-' . Str::random(6),
+            'applications' => [$application->app_key],
+            'user_id' => $user->id,
+            //有效期暂时为1天，后期配置，还要增加refresh token次数
+            'expired_at' => Carbon::now()->addDay(1)->getTimestamp(),
         ]);
 
+        return $model->toArray();
+    }
+
+    /**
+     * @param string $token
+     * @param ApplicationModel $application
+     * @return array
+     */
+    public function increase(string $token, ApplicationModel $application): array
+    {
+        //** A Bad Code , JSONB Append error */
+        $model = $this->get($token);
+        $model['applications'][] = $application->app_key;
+        $applications = array_unique($model['applications']);
+
+        $model = $this->repository->update(['applications' => $applications], $token);
         return $model->toArray();
     }
 

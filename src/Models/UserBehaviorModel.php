@@ -17,7 +17,7 @@ class UserBehaviorModel extends Model
     /**
      * @var string
      */
-    protected $table = 'user_behaviors';
+    protected $table = 'passport_user_behaviors';
 
     /**
      * @var array

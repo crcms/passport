@@ -10,7 +10,8 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use CrCms\Passport\Handlers\CookieTokenCreateHandler;
+use CrCms\Passport\Handlers\Cookie\UpdateHandler;
+use CrCms\Passport\Handlers\CookieTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\JWTTokenHandler;
 use CrCms\Passport\Services\Tokens\Contracts\TokenContract;
@@ -24,27 +25,84 @@ use function CrCms\Foundation\App\Helpers\combination_url;
 class AuthController extends Controller
 {
 
-    public function postLogin(Request $request, LoginHandler $login, CookieTokenCreateHandler $cookieTokenCreate, JWTTokenHandler $JWTToken)
+    public function postLogin(Request $request, LoginHandler $login, CookieTokenHandler $cookieTokenCreate, JWTTokenHandler $JWTToken)
     {
         $user = $login->handle();
 
-        $cookieToken = $cookieTokenCreate->handle($user);
+        $cookieToken = $cookieTokenCreate->handle(CookieTokenHandler::TOKEN_CREATE, $user);
 
-        $token = $JWTToken->handle($user, $cookieToken);
+        $jwtToken = $JWTToken->handle($user, $cookieToken);
 
+        $redirect = $request->input('_redirect');
 
-        if ((bool)$redirect = $request->input('_redirect')) {
-
-           return $this->response->redirectTo(combination_url($redirect, ['token'=>$token]), 301)->withCookie('token',$cookieToken['token']);
-
-        }
-
-        return $this->response->data(['token'=>$token]);
+        return $this->responseOrRedirect($redirect,$cookieToken,$jwtToken);
     }
 
 
-    public function checkLogin(Request $request)
+    public function getToken(Request $request,UpdateHandler $updateHandler,JWTTokenHandler $JWTTokenHandler)
+    {
+        $tokens = $updateHandler->handle();
+
+
+
+        return $this->response->data(
+            empty($tokens) ? $tokens : $JWTTokenHandler->handle($user,$tokens)
+        );
+
+//        $token = $request->cookie('token');
+//        $application = $request->input('app_key');
+//        if ($token && $application) {
+//            $data = $tokenContract->get($token);
+//            if (in_array($application, $data['applications'])) {
+//                return 123;
+//            } else {
+//                $data['applications'][] = $application;
+//                //
+////                \Illuminate\Support\Facades\DB::enableQueryLog();
+//                $user = \CrCms\Passport\Models\UserModel::where('id', $data['user_id'])->first();
+////dd($user,123,\Illuminate\Support\Facades\DB::getQueryLog());
+////                $tokenContract->increase($token,$application);
+//                \Illuminate\Support\Facades\DB::enableQueryLog();
+//                $token = $JWTTokenHandler->handle($user, $tokenContract->increase($token, $application));
+//                dd($token, \Illuminate\Support\Facades\DB::getQueryLog());
+//
+//            }
+//        }
+    }
+
+    public function getRefreshToken()
     {
 
+    }
+
+    public function getLogout(Request $request)
+    {
+        $token = $request->cookie('token');
+        $application = $request->input('app_key');
+        if ($token && $application) {
+            $data = $tokenContract->get($token);
+            if (in_array($application, $data['applications'])) {
+                return 123;
+            } else {
+                $data['applications'][] = $application;
+                //
+//                \Illuminate\Support\Facades\DB::enableQueryLog();
+                $user = \CrCms\Passport\Models\UserModel::where('id', $data['user_id'])->first();
+//dd($user,123,\Illuminate\Support\Facades\DB::getQueryLog());
+//                $tokenContract->increase($token,$application);
+                \Illuminate\Support\Facades\DB::enableQueryLog();
+                $token = $JWTTokenHandler->handle($user, $tokenContract->increase($token, $application));
+                dd($token, \Illuminate\Support\Facades\DB::getQueryLog());
+
+            }
+        }
+    }
+
+    protected function responseOrRedirect(string $redirect, array $cookieToken, array $jwtToken)
+    {
+        return $redirect ?
+            $this->response->redirectTo(combination_url($redirect, $jwtToken), 301)
+                ->withCookie('token', $cookieToken['token']) :
+            $this->response->data($jwtToken);
     }
 }

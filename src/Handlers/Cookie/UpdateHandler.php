@@ -1,28 +1,29 @@
 <?php
 
 /**
- * @author simon <crcms@crcms.cn>
- * @datetime 2018-07-13 11:36
+ * @author simon <simon@crcms.cn>
+ * @datetime 2018-08-11 22:59
  * @link http://crcms.cn/
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Handlers;
+namespace CrCms\Passport\Handlers\Cookie;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
+use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Services\Tokens\Contracts\TokenContract;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * Class CookieTokenCreateHandler
- * @package CrCms\Passport\Handlers
+ * Class UpdateHandler
+ * @package CrCms\Passport\Handlers\Cookie
  */
-class CookieTokenCreateHandler extends AbstractHandler
+class UpdateHandler extends AbstractHandler
 {
     use RequestHandlerTrait;
 
@@ -42,10 +43,10 @@ class CookieTokenCreateHandler extends AbstractHandler
     protected $applicationRepository;
 
     /**
-     * CookieHandler constructor.
+     * CookieTokenHandler constructor.
      * @param Request $request
-     * @param UserModel $user
      * @param TokenContract $token
+     * @param ApplicationRepository $applicationRepository
      */
     public function __construct(Request $request, TokenContract $token, ApplicationRepository $applicationRepository)
     {
@@ -54,39 +55,38 @@ class CookieTokenCreateHandler extends AbstractHandler
         $this->applicationRepository = $applicationRepository;
     }
 
+
     /**
      * @param mixed ...$params
      * @return array
      */
     public function handle(...$params): array
     {
-        $this->validateApplication();
+        $this->validateRule();
 
-        $application = $this->applicationRepository->byAppKeyOrFail($this->request->input('application_key'));
+        $token = $this->request->cookie('token');
+        $appKey = $this->request->input('app_key');
 
-        /* @var UserModel */
-        $user = $params[0];
+        if (empty($token) || empty($appKey)) {
+            return [];
+        }
 
-        return $this->token->create($user, $application);
+        $tokens = $this->token->get($token);
+
+        if (in_array($appKey, $tokens['applications'], true)) {
+            return [];
+        }
+
+        return $this->token->increase($token, $this->applicationRepository->byAppKeyOrFail($appKey));
     }
 
     /**
      *
      */
-    protected function validateApplication(): void
+    protected function validateRule(): void
     {
-        $this->validate($this->request, $this->validateRules());
-    }
-
-    /**
-     * @return array
-     */
-    protected function validateRules(): array
-    {
-        $all = [
-            'application_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')]
-        ];
-
-        return $all;
+        $this->validate($this->request, [
+            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')]
+        ]);
     }
 }

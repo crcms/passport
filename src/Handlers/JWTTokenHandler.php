@@ -3,8 +3,9 @@
 namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Passport\Models\UserModel;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Config\Repository as Config;
@@ -15,6 +16,8 @@ use Illuminate\Config\Repository as Config;
  */
 class JWTTokenHandler extends AbstractHandler
 {
+    use RequestHandlerTrait;
+
     /**
      * @var Config
      */
@@ -22,10 +25,12 @@ class JWTTokenHandler extends AbstractHandler
 
     /**
      * JWTTokenHandler constructor.
+     * @param Request $request
      * @param Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(Request $request, Config $config)
     {
+        $this->request = $request;
         $this->config = $config;
     }
 
@@ -42,12 +47,12 @@ class JWTTokenHandler extends AbstractHandler
         $cookieToken = $params[1];
 
         $jwtToken = $this->guard()
-            ->factory()->setTTL(Carbon::createFromTimestamp($cookieToken['expired_at'])->diffInMinutes(now()))
-            ->fromUser($user->setJWTCustomClaims(Arr::only($cookieToken, ['token', 'app_key'])));
+            ->setTTL(Carbon::createFromTimestamp($cookieToken['expired_at'])->diffInMinutes(now()))
+            ->fromUser($user->setJWTCustomClaims(['token' => $cookieToken['token'], 'app_key' => $this->request->input('application_key')]));
 
         return [
             'token' => $jwtToken,
-            'token_type' => 'bearer',
+            'token_type' => 'Bearer',
             'expired_at' => $cookieToken['expired_at']
         ];
     }

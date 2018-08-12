@@ -21,7 +21,7 @@ class TokenRepository extends AbstractRepository
     /**
      * @var array
      */
-    protected $guard = ['token', 'app_key', 'expired_at'];
+    protected $guard = ['token', 'user_id', 'applications', 'expired_at'];
 
     /**
      * @return TokenModel

@@ -19,6 +19,32 @@ Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Con
 
 
 
+
+    Route::get('passport2',function(\Illuminate\Http\Request $request,\CrCms\Passport\Services\Tokens\Contracts\TokenContract $tokenContract,\CrCms\Passport\Handlers\JWTTokenHandler $JWTTokenHandler){
+       $token = $request->cookie('token');
+        $application = $request->input('app_key',222222222);
+       if ($token) {
+           $data = $tokenContract->get($token);
+            if (in_array($application,$data['applications'])) {
+                return 123;
+            } else {
+                $data['applications'][] = $application;
+                //
+//                \Illuminate\Support\Facades\DB::enableQueryLog();
+                $user = \CrCms\Passport\Models\UserModel::where('id',$data['user_id'])->first();
+//dd($user,123,\Illuminate\Support\Facades\DB::getQueryLog());
+//                $tokenContract->increase($token,$application);
+\Illuminate\Support\Facades\DB::enableQueryLog();
+                $token = $JWTTokenHandler->handle($user,$tokenContract->increase($token,$application));
+                dd($token,\Illuminate\Support\Facades\DB::getQueryLog());
+
+            }
+       }
+
+    });
+
+
+
 });
 
     Route::get('test',function(\Illuminate\Http\Request $request){

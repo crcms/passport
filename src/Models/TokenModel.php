@@ -10,11 +10,30 @@ use CrCms\Foundation\App\Models\Model;
  */
 class TokenModel extends Model
 {
+    /**
+     * @var string
+     */
     protected $table = 'passport_tokens';
 
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * @var string
+     */
     protected $keyType = 'string';
 
+    /**
+     * @var string
+     */
     protected $primaryKey = 'token';
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'applications' => 'array',
+    ];
 }
