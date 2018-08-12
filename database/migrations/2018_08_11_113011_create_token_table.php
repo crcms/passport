@@ -18,6 +18,7 @@ class CreateTokenTable extends Migration
             $table->unsignedBigInteger('user_id')->default(0)->comment('用户ID');
             $table->jsonb('applications')->comment('所属应用');
             $table->unsignedBigInteger('expired_at')->default(0)->comment('过期时间');
+            $table->unsignedSmallInteger('refresh_num')->default(0)->comment('刷新次数');
             $table->primary('token');
         });
     }

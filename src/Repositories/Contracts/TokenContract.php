@@ -7,14 +7,14 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Services\Tokens\Contracts;
+namespace CrCms\Passport\Repositories\Contracts;
 
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
 
 /**
  * Interface TokenContract
- * @package CrCms\Passport\SSO\Contracts
+ * @package CrCms\Passport\Repositories\Contracts
  */
 interface TokenContract
 {
@@ -31,21 +31,32 @@ interface TokenContract
     public function get(string $token): array;
 
     /**
-     * @param UserModel $user
-     * @return array
-     */
-    public function create(UserModel $user, ApplicationModel $application): array;
-
-    /**
-     * @param string $token
      * @param ApplicationModel $application
+     * @param UserModel $user
+     * @param int $expired
      * @return array
      */
-    public function increase(string $token, ApplicationModel $application): array;
+    public function createNew(ApplicationModel $application, UserModel $user, int $expired): array;
 
     /**
+     * @param ApplicationModel $application
+     * @param string $token
+     * @return array
+     */
+    public function increase(ApplicationModel $application, string $token): array;
+
+    /**
+     * @param ApplicationModel $application
+     * @param string $token
+     * @param int $expired
+     * @return array
+     */
+    public function refresh(ApplicationModel $application, string $token, int $expired): array;
+
+    /**
+     * @param ApplicationModel $application
      * @param string $token
      * @return bool
      */
-    public function delete(string $token): bool;
+    public function remove(ApplicationModel $application, string $token): bool;
 }

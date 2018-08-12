@@ -14,10 +14,10 @@ use CrCms\Passport\Listeners\NotificationListener;
 use CrCms\Passport\Listeners\RegisterMailListener;
 use CrCms\Passport\Listeners\Repositories\UserBehaviorListener;
 use CrCms\Passport\Listeners\Repositories\UserListener;
+use CrCms\Passport\Repositories\TokenRepository;
 use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
-use CrCms\Passport\Services\Tokens\DatabaseService;
-use CrCms\Passport\Services\Tokens\Contracts\TokenContract;
+use CrCms\Passport\Repositories\Contracts\TokenContract;
 use Illuminate\Support\Facades\Event;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
@@ -63,8 +63,6 @@ class PassportServiceProvider extends ModuleServiceProvider
         $this->loadViewsFrom($this->basePath . '/resources/views', $this->name);
 
         $this->listens();
-
-        $this->app->bind(TokenContract::class,DatabaseService::class);
     }
 
     /**
@@ -80,7 +78,7 @@ class PassportServiceProvider extends ModuleServiceProvider
         Event::listen(BehaviorCreatedEvent::class, BehaviorCreatedListener::class);
 
         Event::listen(LoginEvent::class, BehaviorCreatedListener::class);
-        Event::listen(LoginEvent::class, LoginTokenListener::class);
+//        Event::listen(LoginEvent::class, LoginTokenListener::class);
         //Event::listen(LoginEvent::class, NotificationListener::class);
     }
 
@@ -94,5 +92,7 @@ class PassportServiceProvider extends ModuleServiceProvider
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(LaravelServiceProvider::class);
+
+        $this->app->bind(TokenContract::class,TokenRepository::class);
     }
 }

@@ -11,12 +11,19 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
+use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
+use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
+use CrCms\Passport\Repositories\ApplicationRepository;
+use CrCms\Passport\Repositories\Contracts\TokenContract;
+use CrCms\Passport\Tasks\CookieTask;
+use CrCms\Passport\Tasks\JwtTask;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -30,12 +37,7 @@ use Illuminate\Contracts\Config\Repository as Config;
  */
 class LoginHandler extends AbstractHandler
 {
-    use AuthenticatesUsers, RequestHandlerTrait;
-
-    /**
-     * @var Config
-     */
-    protected $config;
+    use AuthenticatesUsers;
 
     /**
      * @var array
@@ -43,14 +45,33 @@ class LoginHandler extends AbstractHandler
     protected $defaultFields = ['name', 'password'];
 
     /**
-     * LoginAction constructor.
-     * @param Request $request
-     * @param Config $config
+     * @var Request
      */
-    public function __construct(Request $request, Config $config)
+    protected $request;
+
+    /**
+     * @var TokenContract
+     */
+    protected $token;
+
+    /**
+     * @var ApplicationRepository
+     */
+    protected $applicationRepository;
+
+    /**
+     * Handler是不直接接收Request，这里是个特殊，为了直接使用Laravel自带的登录
+     * 后期整改掉
+     *
+     * LoginHandler constructor.
+     * @param Request $request
+     * @param TokenContract $token
+     */
+    public function __construct(Request $request, TokenContract $token, ApplicationRepository $applicationRepository)
     {
         $this->request = $request;
-        $this->config = $config;
+        $this->token = $token;
+        $this->applicationRepository = $applicationRepository;
     }
 
     /**
@@ -82,9 +103,9 @@ class LoginHandler extends AbstractHandler
      * @return UserModel
      * @throws ValidationException|UnauthorizedException
      */
-    public function handle(...$params): UserModel
+    public function handle(DataProviderContract $provider): array
     {
-        $this->validateLogin();
+//        $this->validateLogin();
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
@@ -105,11 +126,23 @@ class LoginHandler extends AbstractHandler
 
         $this->clearLoginAttempts($this->request);
 
+        $appKey = $provider->get('app_key');
+
+        /* @var UserModel $user */
         $user = $this->guard()->user();
 
         $this->authenticatedEvent($user);
 
-        return $user;
+        $application = $this->applicationRepository->byAppKeyOrFail($appKey);
+
+        $tokens = $this->token->createNew($application, $user, $this->config->get('passport.ttl'));
+
+//        $cookieToken = $this->app->make(CookieTask::class)
+//            ->handle(CookieTask::TOKEN_CREATE, $appKey, $user);
+
+        $jwtToken = $this->app->make(JwtTask::class)->handle($user, $tokens, $appKey);
+
+        return ['jwt' => $jwtToken, 'cookie' => $tokens];
     }
 
     /**
@@ -171,6 +204,6 @@ class LoginHandler extends AbstractHandler
      */
     protected function guard()
     {
-        return Auth::guard($this->config->get('auth.defaults.guard'));
+        return $this->auth->guard($this->config->get('auth.defaults.guard'));
     }
 }
