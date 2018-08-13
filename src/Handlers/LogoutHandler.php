@@ -10,8 +10,7 @@
 namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
-use CrCms\Foundation\App\Helpers\InstanceTrait;
-use Illuminate\Support\Facades\Auth;
+use CrCms\Passport\Handlers\Traits\Token;
 
 /**
  * Class LogoutHandler
@@ -19,13 +18,13 @@ use Illuminate\Support\Facades\Auth;
  */
 class LogoutHandler extends AbstractHandler
 {
-    use InstanceTrait;
+    use Token;
 
     /**
      * @return void
      */
     public function handle()
     {
-        Auth::guard($this->config->get('auth.defaults.guard'))->logout();
+        $this->guard()->logout();
     }
 }

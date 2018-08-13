@@ -11,26 +11,26 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Passport\Repositories\ApplicationRepository;
-use CrCms\Passport\Repositories\Contracts\TokenContract;
+use CrCms\Passport\Handlers\Traits\Token;
 use Illuminate\Auth\AuthenticationException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Exception;
-use Tymon\JWTAuth\JWTGuard;
 
 /**
- * Class TokenRefreshHandler
+ * Class RefreshTokenHandler
  * @package CrCms\Modules\passport\src\Handlers
  */
-class TokenRefreshHandler extends AbstractHandler
+class RefreshTokenHandler extends AbstractHandler
 {
-    protected $token;
+    use Token;
 
-    public function __construct(TokenContract $token)
-    {
-        $this->token = $token;
-    }
-
+    /**
+     * @param DataProviderContract $provider
+     * @return array
+     * @throws AuthenticationException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Tymon\JWTAuth\Exceptions\JWTException
+     */
     public function handle(DataProviderContract $provider)
     {
         try {
@@ -41,18 +41,8 @@ class TokenRefreshHandler extends AbstractHandler
             throw new AuthenticationException;
         }
 
-        $appKey = $provider->get('app_key');
+        $tokens = $this->token()->refresh($this->application($provider->get('app_key')), $payload['token']);
 
-        $application = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($appKey);
-
-        $tokens = $this->token->refresh($application,$payload['token']);
-
-        $token = $this->guard()->setTTL($this->config->get('passport.ttl'))->refresh();
-        return ['token'=>$token];
-    }
-
-    protected function guard(): JWTGuard
-    {
-        return $this->auth->guard($this->config->get('auth.defaults.guard'));
+        return $this->jwt($this->guard()->setTTL($tokens['expired_at'])->refresh(), $tokens['expired_at']);
     }
 }

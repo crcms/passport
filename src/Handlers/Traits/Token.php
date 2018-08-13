@@ -11,9 +11,11 @@ namespace CrCms\Passport\Handlers\Traits;
 
 use CrCms\Foundation\App\Helpers\InstanceTrait;
 use CrCms\Passport\Models\ApplicationModel;
+use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use Illuminate\Support\Carbon;
+use Tymon\JWTAuth\JWTGuard;
 
 /**
  * Trait Token
@@ -63,5 +65,27 @@ trait Token
     protected function expired(int $expired): int
     {
         return Carbon::createFromTimestamp($expired)->diffInMinutes(now());
+    }
+
+    /**
+     * @param string $guard
+     * @return JWTGuard
+     */
+    protected function guard(): JWTGuard
+    {
+        return $this->auth->guard($this->config->get('auth.defaults.guard'));
+    }
+
+    /**
+     * @param string $appKey
+     * @param UserModel $user
+     * @param array $tokens
+     * @return string
+     */
+    protected function jwtToken(string $appKey, UserModel $user, array $tokens): string
+    {
+        return $this->guard()
+            ->setTTL($this->expired($tokens['expired_at']))
+            ->fromUser($user->setJWTCustomClaims(['token' => $tokens['token'], 'app_key' => $appKey]));
     }
 }
