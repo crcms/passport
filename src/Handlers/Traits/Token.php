@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @author simon <simon@crcms.cn>
+ * @datetime 2018-08-14 06:49
+ * @link http://crcms.cn/
+ * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
+ */
+
+namespace CrCms\Passport\Handlers\Traits;
+
+use CrCms\Foundation\App\Helpers\InstanceTrait;
+use CrCms\Passport\Models\ApplicationModel;
+use CrCms\Passport\Repositories\ApplicationRepository;
+use CrCms\Passport\Repositories\Contracts\TokenContract;
+use Illuminate\Support\Carbon;
+
+/**
+ * Trait Token
+ * @package CrCms\Passport\Handlers\Traits
+ */
+trait Token
+{
+    use InstanceTrait;
+
+    /**
+     * @param string $appKey
+     * @return ApplicationModel
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function application(string $appKey): ApplicationModel
+    {
+        return $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($appKey);
+    }
+
+    /**
+     * @return TokenContract
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function token(): TokenContract
+    {
+        return $this->app->make(TokenContract::class);
+    }
+
+    /**
+     * @param string $token
+     * @param int $expired
+     * @return array
+     */
+    protected function jwt(string $token, int $expired): array
+    {
+        return [
+            'token' => $token,
+            'token_type' => 'Bearer',
+            'expired_at' => $this->expired($expired)
+        ];
+    }
+
+    /**
+     * @param int $expired
+     * @return int
+     */
+    protected function expired(int $expired): int
+    {
+        return Carbon::createFromTimestamp($expired)->diffInMinutes(now());
+    }
+}

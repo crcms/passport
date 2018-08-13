@@ -10,8 +10,8 @@
 namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\App\Helpers\InstanceTrait;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * Class LogoutHandler
@@ -19,22 +19,10 @@ use Illuminate\Contracts\Config\Repository as Config;
  */
 class LogoutHandler extends AbstractHandler
 {
-    /**
-     * @var Config
-     */
-    protected $config;
+    use InstanceTrait;
 
     /**
-     * LogoutAction constructor.
-     * @param Config $config
-     */
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return mixed|void
+     * @return void
      */
     public function handle()
     {

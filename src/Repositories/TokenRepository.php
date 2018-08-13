@@ -9,6 +9,7 @@
 
 namespace CrCms\Passport\Repositories;
 
+use CrCms\Foundation\App\Helpers\InstanceTrait;
 use CrCms\Foundation\App\Repositories\AbstractRepository;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\TokenModel;
@@ -23,6 +24,8 @@ use Illuminate\Support\Str;
  */
 class TokenRepository extends AbstractRepository implements TokenContract
 {
+    use InstanceTrait;
+
     /**
      * @var array
      */
@@ -49,7 +52,7 @@ class TokenRepository extends AbstractRepository implements TokenContract
      * @param string $token
      * @return array
      */
-    public function get(string $token): array
+    public function token(string $token): array
     {
         return $this->byStringIdOrFail($token)->toArray();
     }
@@ -57,17 +60,16 @@ class TokenRepository extends AbstractRepository implements TokenContract
     /**
      * @param ApplicationModel $application
      * @param UserModel $user
-     * @param int $expired
      * @return array
      * @throws \Exception
      */
-    public function createNew(ApplicationModel $application, UserModel $user, int $expired): array
+    public function new(ApplicationModel $application, UserModel $user): array
     {
         $model = parent::create([
             'token' => Str::random(10) . '-' . $user->id . '-' . strval($application->id) . '-' . Str::random(6),
             'applications' => [$application->app_key],
             'user_id' => $user->id,
-            'expired_at' => Carbon::now()->addMinute($expired)->getTimestamp(),
+            'expired_at' => Carbon::now()->addMinute($this->config->get('passport.ttl'))->getTimestamp(),
         ]);
 
         return $model->toArray();
@@ -81,7 +83,7 @@ class TokenRepository extends AbstractRepository implements TokenContract
     public function increase(ApplicationModel $application, string $token): array
     {
         //** A Bad Code , JSONB Append error */
-        $model = $this->get($token);
+        $model = $this->token($token);
         $model['applications'][] = $application->app_key;
         $applications = array_unique($model['applications']);
 
@@ -92,14 +94,13 @@ class TokenRepository extends AbstractRepository implements TokenContract
     /**
      * @param ApplicationModel $application
      * @param string $token
-     * @param int $expired
      * @return array
      */
-    public function refresh(ApplicationModel $application, string $token, int $expired): array
+    public function refresh(ApplicationModel $application, string $token): array
     {
         /* @var TokenModel $model */
-        $model = $this->get($token);
-        $model = parent::update(['expired_at' => $expired, 'refresh_num' => $model['refresh_num'] + 1], $model['token']);
+        $model = $this->token($token);
+        $model = parent::update(['expired_at' => $this->config->get('passport.ttl'), 'refresh_num' => $model['refresh_num'] + 1], $model['token']);
         return $model->toArray();
     }
 

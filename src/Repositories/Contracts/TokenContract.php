@@ -25,18 +25,17 @@ interface TokenContract
     public function exists(string $token): bool;
 
     /**
-     * @param UserModel $user
+     * @param string $token
      * @return array
      */
-    public function get(string $token): array;
+    public function token(string $token): array;
 
     /**
      * @param ApplicationModel $application
      * @param UserModel $user
-     * @param int $expired
      * @return array
      */
-    public function createNew(ApplicationModel $application, UserModel $user, int $expired): array;
+    public function new(ApplicationModel $application, UserModel $user): array;
 
     /**
      * @param ApplicationModel $application
@@ -48,10 +47,9 @@ interface TokenContract
     /**
      * @param ApplicationModel $application
      * @param string $token
-     * @param int $expired
      * @return array
      */
-    public function refresh(ApplicationModel $application, string $token, int $expired): array;
+    public function refresh(ApplicationModel $application, string $token): array;
 
     /**
      * @param ApplicationModel $application

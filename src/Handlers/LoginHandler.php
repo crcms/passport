@@ -14,12 +14,14 @@ use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
+use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use CrCms\Passport\Tasks\CookieTask;
 use CrCms\Passport\Tasks\JwtTask;
+use CrCms\Passport\Tasks\TokenTask;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -37,7 +39,7 @@ use Illuminate\Contracts\Config\Repository as Config;
  */
 class LoginHandler extends AbstractHandler
 {
-    use AuthenticatesUsers;
+    use AuthenticatesUsers, Token;
 
     /**
      * @var array
@@ -133,16 +135,17 @@ class LoginHandler extends AbstractHandler
 
         $this->authenticatedEvent($user);
 
-        $application = $this->applicationRepository->byAppKeyOrFail($appKey);
+        $tokens = $this->token()->new($this->application($appKey), $user);
 
-        $tokens = $this->token->createNew($application, $user, $this->config->get('passport.ttl'));
+//        $tokens = $this->app->make(TokenTask::class)
+//            ->handle(TokenTask::TOKEN_NEW, $appKey, $user);
 
-//        $cookieToken = $this->app->make(CookieTask::class)
-//            ->handle(CookieTask::TOKEN_CREATE, $appKey, $user);
+        //$jwtToken = $this->app->make(JwtTask::class)->handle($user, $tokens, $appKey);
+        $token = $this->guard()
+            ->setTTL($this->expired($tokens['expired_at']))
+            ->fromUser($user->setJWTCustomClaims(['token' => $tokens['token'], 'app_key' => $appKey]));
 
-        $jwtToken = $this->app->make(JwtTask::class)->handle($user, $tokens, $appKey);
-
-        return ['jwt' => $jwtToken, 'cookie' => $tokens];
+        return ['jwt' => $this->jwt($token, $tokens['expired_at']), 'cookie' => $tokens];
     }
 
     /**

@@ -11,12 +11,14 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\CookieTask;
 use CrCms\Passport\Tasks\JwtTask;
 use CrCms\Passport\Models\UserModel;
+use CrCms\Passport\Tasks\TokenTask;
 
 /**
  * Class TokenHandler
@@ -24,6 +26,8 @@ use CrCms\Passport\Models\UserModel;
  */
 class TokenHandler extends AbstractHandler
 {
+    use Token;
+
     /**
      * @var TokenContract
      */
@@ -54,7 +58,9 @@ class TokenHandler extends AbstractHandler
     {
         $appKey = $provider->get('app_key');
 
-        $tokens = $this->token->get($provider->get('token'));
+        $tokens = $this->token()->token($provider->get('token'));
+
+
 
         // 只执行一次
         /*if (in_array($appKey, $tokens['applications'], true)) {
@@ -62,17 +68,21 @@ class TokenHandler extends AbstractHandler
         }*/
 
         /* @var UserModel $user */
-        $user = $this->repository->byIntIdOrFail($tokens['user_id']);
+//        $user = $this->repository->byIntIdOrFail($tokens['user_id']);
 
-        $application = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($appKey);
+//        $application = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($appKey);
+//
+//        $tokens = $this->token->increase($application, $user);
 
-        $tokens = $this->token->increase($application, $user);
+//        $tokens = $this->app->make(TokenTask::class)
+//            ->handle(TokenTask::TOKEN_INCREASE, $appKey, $tokens['token']);
+//
+//        $jwtToken = $this->app->make(JwtTask::class)->handle($user, $tokens, $appKey);
+//
+//        return $jwtToken;
 
-//        $cookie = $this->app->make(CookieTask::class)
-//            ->handle(CookieTask::TOKEN_INCREASE, $appKey, $tokens['token']);
+        $token = $this->guard()->setTTL($this->expired($tokens['expired_at']))->refresh();
 
-        $jwtToken = $this->app->make(JwtTask::class)->handle($user, $tokens, $appKey);
-
-        return $jwtToken;
+        return $this->jwt($token, $tokens['expired_at']);
     }
 }

@@ -12,13 +12,12 @@ namespace CrCms\Passport\Tasks;
 use CrCms\Foundation\App\Tasks\AbstractTask;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
-use CrCms\Repository\Exceptions\ResourceNotFoundException;
 
 /**
- * Class CookieTask
+ * Class TokenTask
  * @package CrCms\Passport\Tasks
  */
-class CookieTask extends AbstractTask
+class TokenTask extends AbstractTask
 {
     /**
      * @var TokenContract
@@ -33,7 +32,7 @@ class CookieTask extends AbstractTask
     /**
      *
      */
-    const TOKEN_CREATE = 'createNew';
+    const TOKEN_NEW = 'new';
 
     /**
      *
@@ -43,7 +42,17 @@ class CookieTask extends AbstractTask
     /**
      *
      */
-    const TOKEN_DELETE = 'delete';
+    const TOKEN_DELETE = 'remove';
+
+    /**
+     *
+     */
+    const TOKEN_REFRESH = 'refresh';
+
+    /**
+     *
+     */
+    const TOKEN_REMOVE = 'remove';
 
     /**
      * CookieTokenHandler constructor.
@@ -57,6 +66,8 @@ class CookieTask extends AbstractTask
     }
 
     /**
+     *
+     * @example self 75 handle($action, $appKey, .....)
      * @param mixed ...$params
      * @return array
      */

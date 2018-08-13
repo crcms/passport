@@ -45,7 +45,7 @@ class TokenRefreshHandler extends AbstractHandler
 
         $application = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($appKey);
 
-        $tokens = $this->token->refresh($application,$payload['token'],$this->config->get('passport.ttl'));
+        $tokens = $this->token->refresh($application,$payload['token']);
 
         $token = $this->guard()->setTTL($this->config->get('passport.ttl'))->refresh();
         return ['token'=>$token];
