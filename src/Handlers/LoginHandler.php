@@ -28,7 +28,9 @@ use Illuminate\Validation\ValidationException;
  */
 class LoginHandler extends AbstractHandler
 {
-    use AuthenticatesUsers, Token;
+    use AuthenticatesUsers, Token {
+        AuthenticatesUsers::guard insteadof Token;
+    }
 
     /**
      * @var array
@@ -57,7 +59,7 @@ class LoginHandler extends AbstractHandler
      */
     protected function validateLogin(): void
     {
-        $this->validate($this->request, $this->validateRules());
+        //$this->validate($this->request, $this->validateRules());
     }
 
     /**
@@ -77,9 +79,9 @@ class LoginHandler extends AbstractHandler
     }
 
     /**
-     * @param mixed ...$params
-     * @return UserModel
-     * @throws ValidationException|UnauthorizedException
+     * @param DataProviderContract $provider
+     * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function handle(DataProviderContract $provider): array
     {

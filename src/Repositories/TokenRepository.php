@@ -24,8 +24,6 @@ use Illuminate\Support\Str;
  */
 class TokenRepository extends AbstractRepository implements TokenContract
 {
-    use InstanceTrait;
-
     /**
      * @var array
      */
@@ -69,7 +67,7 @@ class TokenRepository extends AbstractRepository implements TokenContract
             'token' => Str::random(10) . '-' . $user->id . '-' . strval($application->id) . '-' . Str::random(6),
             'applications' => [$application->app_key],
             'user_id' => $user->id,
-            'expired_at' => Carbon::now()->addMinute($this->config->get('passport.ttl'))->getTimestamp(),
+            'expired_at' => Carbon::now()->addMinute(config()->get('passport.ttl'))->getTimestamp(),
         ]);
 
         return $model->toArray();
@@ -100,7 +98,7 @@ class TokenRepository extends AbstractRepository implements TokenContract
     {
         /* @var TokenModel $model */
         $model = $this->token($token);
-        $model = parent::update(['expired_at' => $this->config->get('passport.ttl'), 'refresh_num' => $model['refresh_num'] + 1], $model['token']);
+        $model = parent::update(['expired_at' => config()->get('passport.ttl'), 'refresh_num' => $model['refresh_num'] + 1], $model['token']);
         return $model->toArray();
     }
 
