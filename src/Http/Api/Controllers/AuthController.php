@@ -13,6 +13,7 @@ use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
+use CrCms\Passport\Handlers\SSO\CheckLoginHandler;
 use CrCms\Passport\Handlers\TokenHandler;
 use Illuminate\Http\Request;
 use function CrCms\Foundation\App\Helpers\combination_url;
@@ -60,8 +61,21 @@ class AuthController extends Controller
      */
     public function getRefreshToken(Request $request, DataProviderContract $provider)
     {
-        $tokens = $this->app->make(RefreshTokenHandler::class)->handle();
+        $tokens = $this->app->make(RefreshTokenHandler::class)->handle($provider);
         return $this->responseOrRedirect($request->input('_redirect'), $tokens);
+    }
+
+    /**
+     * @param Request $request
+     * @param DataProviderContract $provider
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getCheckLogin(Request $request, DataProviderContract $provider)
+    {
+        $status = $this->app->make(CheckLoginHandler::class)->handle($provider);
+
+        return $status ? $this->response->noContent() : $this->response->errorUnauthorized();
     }
 
     /**
