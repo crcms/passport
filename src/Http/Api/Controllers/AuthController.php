@@ -50,6 +50,11 @@ class AuthController extends Controller
         $provider->set('token', $request->cookie('token'));
         $tokens = $this->app->make(TokenHandler::class)->handle($provider);
 
+        //jsonp
+        if ((bool)$callback = $request->input('callback')) {
+            return $this->response->jsonp($callback, $tokens);
+        }
+
         return $this->responseOrRedirect($request->input('_redirect'), $tokens);
     }
 
@@ -59,8 +64,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getRefreshToken(Request $request, DataProviderContract $provider)
-    {
+    public function postRefreshToken(Request $request, DataProviderContract $provider)
+    {logger($request);
         $tokens = $this->app->make(RefreshTokenHandler::class)->handle($provider);
         return $this->responseOrRedirect($request->input('_redirect'), $tokens);
     }
@@ -71,7 +76,7 @@ class AuthController extends Controller
      * @return mixed
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getCheckLogin(Request $request, DataProviderContract $provider)
+    public function postCheckLogin(Request $request, DataProviderContract $provider)
     {
         $status = $this->app->make(CheckLoginHandler::class)->handle($provider);
 
