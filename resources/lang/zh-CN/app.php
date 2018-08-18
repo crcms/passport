@@ -31,4 +31,9 @@ return [
 
     //
     'param_error' => '参数错误',
+
+    'auth' => [
+        'token' => 'Token',
+        'app_key' => '应用ID',
+    ]
 ];

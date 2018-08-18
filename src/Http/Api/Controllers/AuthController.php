@@ -15,7 +15,10 @@ use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\SSO\CheckLoginHandler;
 use CrCms\Passport\Handlers\TokenHandler;
-use Illuminate\Http\Request;
+use CrCms\Passport\Http\Requests\Auth\CheckLoginRequest;
+use CrCms\Passport\Http\Requests\Auth\LoginRequest;
+use CrCms\Passport\Http\Requests\Auth\RefreshTokenRequest;
+use CrCms\Passport\Http\Requests\Auth\TokenRequest;
 use function CrCms\Foundation\App\Helpers\combination_url;
 
 /**
@@ -25,12 +28,12 @@ use function CrCms\Foundation\App\Helpers\combination_url;
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * @param LoginRequest $request
      * @param DataProviderContract $dataProviderContract
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function postLogin(Request $request, DataProviderContract $dataProviderContract)
+    public function postLogin(LoginRequest $request, DataProviderContract $dataProviderContract)
     {
         $tokens = $this->app->make(LoginHandler::class)->handle($dataProviderContract);
 
@@ -40,18 +43,18 @@ class AuthController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param TokenRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getToken(Request $request, DataProviderContract $provider)
+    public function getToken(TokenRequest $request, DataProviderContract $provider)
     {
         $provider->set('token', $request->cookie('token'));
         $tokens = $this->app->make(TokenHandler::class)->handle($provider);
 
         //jsonp
-        if ((bool)$callback = $request->input('callback')) {
+        if ((bool)$callback = $request->input('_callback')) {
             return $this->response->jsonp($callback, $tokens);
         }
 
@@ -59,24 +62,24 @@ class AuthController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param RefreshTokenRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function postRefreshToken(Request $request, DataProviderContract $provider)
-    {logger($request);
+    public function postRefreshToken(RefreshTokenRequest $request, DataProviderContract $provider)
+    {
         $tokens = $this->app->make(RefreshTokenHandler::class)->handle($provider);
         return $this->responseOrRedirect($request->input('_redirect'), $tokens);
     }
 
     /**
-     * @param Request $request
+     * @param CheckLoginRequest $request
      * @param DataProviderContract $provider
      * @return mixed
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function postCheckLogin(Request $request, DataProviderContract $provider)
+    public function postCheckLogin(CheckLoginRequest $request, DataProviderContract $provider)
     {
         $status = $this->app->make(CheckLoginHandler::class)->handle($provider);
 
@@ -90,6 +93,11 @@ class AuthController extends Controller
     public function getLogout(DataProviderContract $provider)
     {
         $this->app->make(LoginHandler::class);
+    }
+
+    public function postUser()
+    {
+        //return $this->response->data($this->)
     }
 
     /**
