@@ -68,15 +68,6 @@ trait Token
     }
 
     /**
-     * @param string $guard
-     * @return JWTGuard
-     */
-    protected function guard(): JWTGuard
-    {
-        return $this->auth->guard($this->config->get('auth.defaults.guard'));
-    }
-
-    /**
      * @param string $appKey
      * @param UserModel $user
      * @param array $tokens
