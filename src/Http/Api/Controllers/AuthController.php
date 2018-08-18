@@ -15,11 +15,14 @@ use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\SSO\CheckLoginHandler;
 use CrCms\Passport\Handlers\TokenHandler;
+use CrCms\Passport\Handlers\UserHandler;
+use CrCms\Passport\Http\Api\Resources\UserResource;
 use CrCms\Passport\Http\Requests\Auth\CheckLoginRequest;
 use CrCms\Passport\Http\Requests\Auth\LoginRequest;
 use CrCms\Passport\Http\Requests\Auth\RefreshTokenRequest;
 use CrCms\Passport\Http\Requests\Auth\TokenRequest;
 use function CrCms\Foundation\App\Helpers\combination_url;
+use CrCms\Passport\Http\Requests\Auth\UserRequest;
 
 /**
  * Class AuthController
@@ -70,6 +73,7 @@ class AuthController extends Controller
     public function postRefreshToken(RefreshTokenRequest $request, DataProviderContract $provider)
     {
         $tokens = $this->app->make(RefreshTokenHandler::class)->handle($provider);
+
         return $this->responseOrRedirect($request->input('_redirect'), $tokens);
     }
 
@@ -95,9 +99,16 @@ class AuthController extends Controller
         $this->app->make(LoginHandler::class);
     }
 
-    public function postUser()
+    /**
+     * @param UserRequest $request
+     * @param DataProviderContract $provider
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postUser(UserRequest $request, DataProviderContract $provider)
     {
-        //return $this->response->data($this->)
+        $user = $this->app->make(UserHandler::class)->handle($provider);
+
+        return $this->response->resource($user, UserResource::class);
     }
 
     /**
