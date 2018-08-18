@@ -112,6 +112,8 @@ class AuthController extends Controller
     {
         $this->app->make(LogoutHandler::class)->handle();
 
+        /* @todo 重置cookie token为null */
+
         return $this->response->noContent();
     }
 
