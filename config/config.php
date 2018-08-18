@@ -4,13 +4,6 @@ return [
     'domain' => 'passport.crcms.local',
     'api_domain' => '',//passport.api.crcms.local
 
-    'hosts' => [
-        'http://192.168.1.142:28080/communities/passport',
-        'http://crcms-module.local/passport'
-    ],
-
-
-
     /*
     |--------------------------------------------------------------------------
     | JWT time to live
@@ -26,7 +19,7 @@ return [
     |
     */
 
-    'ttl' => env('SSO_TTL', 1),
+    'ttl' => env('PASSPORT_TTL', 100),
 
     /*
     |--------------------------------------------------------------------------
@@ -45,5 +38,5 @@ return [
     |
     */
 
-    'refresh_ttl' => env('SSO_REFRESH_TTL', 20160),
+    'refresh_ttl' => env('PASSPORT_REFRESH_TTL', 20160),
 ];
