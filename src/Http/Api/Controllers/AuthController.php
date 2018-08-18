@@ -11,6 +11,7 @@ namespace CrCms\Passport\Http\Api\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\SSO\CheckLoginHandler;
@@ -91,15 +92,6 @@ class AuthController extends Controller
     }
 
     /**
-     * @param DataProviderContract $provider
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public function getLogout(DataProviderContract $provider)
-    {
-        $this->app->make(LoginHandler::class);
-    }
-
-    /**
      * @param UserRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -109,6 +101,18 @@ class AuthController extends Controller
         $user = $this->app->make(UserHandler::class)->handle($provider);
 
         return $this->response->resource($user, UserResource::class);
+    }
+
+    /**
+     * @param UserRequest $request
+     * @param DataProviderContract $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogout(UserRequest $request, DataProviderContract $provider)
+    {
+        $this->app->make(LogoutHandler::class)->handle();
+
+        return $this->response->noContent();
     }
 
     /**

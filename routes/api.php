@@ -15,6 +15,7 @@ Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Api
     Route::get('token', 'AuthController@getToken')->name('passport.token.get');
     Route::post('refresh-token', 'AuthController@postRefreshToken')->name('passport.refresh_token.post');
     Route::post('check-login', 'AuthController@postCheckLogin')->name('passport.check_login.post');
+    Route::middleware('auth:api')->post('user', 'AuthController@postUser')->name('passport.user.post');
     Route::middleware('auth:api')->get('logout', 'AuthController@getLogout')->name('passport.logout.get');
 
     Route::get('/',function(\Illuminate\Http\Request $request){
