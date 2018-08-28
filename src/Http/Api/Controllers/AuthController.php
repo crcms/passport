@@ -14,7 +14,7 @@ use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
-use CrCms\Passport\Handlers\SSO\CheckLoginHandler;
+use CrCms\Passport\Handlers\CheckLoginHandler;
 use CrCms\Passport\Handlers\TokenHandler;
 use CrCms\Passport\Handlers\UserHandler;
 use CrCms\Passport\Http\Api\Resources\UserResource;
