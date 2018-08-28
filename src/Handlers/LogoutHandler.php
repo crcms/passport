@@ -10,6 +10,7 @@
 namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\Traits\Token;
 
 /**
@@ -21,10 +22,24 @@ class LogoutHandler extends AbstractHandler
     use Token;
 
     /**
-     * @return void
+     * @param DataProviderContract $provider
+     * @return bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function handle()
+    public function handle(DataProviderContract $provider): bool
     {
-        $this->guard()->logout();
+        $payload = $this->guard()->manager()->getJWTProvider()->decode($this->guard()->getToken()->get());
+
+        //remove token
+        if ($this->token()->remove(
+            $this->application($provider->get('app_key')),
+            $payload['token']
+        )) {
+            //remove jwt token
+            $this->guard()->logout();
+            return true;
+        }
+
+        return false;
     }
 }

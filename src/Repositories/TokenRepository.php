@@ -9,7 +9,6 @@
 
 namespace CrCms\Passport\Repositories;
 
-use CrCms\Foundation\App\Helpers\InstanceTrait;
 use CrCms\Foundation\App\Repositories\AbstractRepository;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\TokenModel;
@@ -109,6 +108,7 @@ class TokenRepository extends AbstractRepository implements TokenContract
      */
     public function remove(ApplicationModel $application, string $token): bool
     {
+        /* @todo 这里还需要条件app_key在这里面才行 */
         return (bool)parent::delete($token);
     }
 }

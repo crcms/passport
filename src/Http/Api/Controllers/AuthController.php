@@ -110,7 +110,7 @@ class AuthController extends Controller
      */
     public function getLogout(UserRequest $request, DataProviderContract $provider)
     {
-        $this->app->make(LogoutHandler::class)->handle();
+        $this->app->make(LogoutHandler::class)->handle($provider);
 
         /* @todo 重置cookie token为null */
 
