@@ -15,7 +15,6 @@ use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use Illuminate\Support\Carbon;
-use Tymon\JWTAuth\JWTGuard;
 
 /**
  * Trait Token
