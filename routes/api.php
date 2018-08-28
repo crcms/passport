@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Api\Controllers')->group(function () {
 
-    Route::post('register', 'RegisterController@postRegister')->name('passport.register.post');
+    Route::post('register', 'AuthController@postRegister')->name('passport.register.post');
     Route::post('login', 'AuthController@postLogin')->name('passport.login.post');
 
     Route::post('forget-password', 'ForgotPasswordController@sendResetLinkEmail')->name('passport.forget_password.send_link_email.post');
@@ -15,6 +15,7 @@ Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Api
     Route::get('token', 'AuthController@getToken')->name('passport.token.get');
     Route::post('refresh-token', 'AuthController@postRefreshToken')->name('passport.refresh_token.post');
     Route::post('check-login', 'AuthController@postCheckLogin')->name('passport.check_login.post');
+    //
     Route::middleware('auth:api')->post('user', 'AuthController@postUser')->name('passport.user.post');
     Route::middleware('auth:api')->get('logout', 'AuthController@getLogout')->name('passport.logout.get');
 

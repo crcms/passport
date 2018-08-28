@@ -11,10 +11,12 @@ namespace CrCms\Passport\Http\Api\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Modules\passport\src\Http\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\CheckLoginHandler;
+use CrCms\Passport\Handlers\RegisterHandler;
 use CrCms\Passport\Handlers\TokenHandler;
 use CrCms\Passport\Handlers\UserHandler;
 use CrCms\Passport\Http\Api\Resources\UserResource;
@@ -33,13 +35,22 @@ class AuthController extends Controller
 {
     /**
      * @param LoginRequest $request
-     * @param DataProviderContract $dataProviderContract
+     * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function postLogin(LoginRequest $request, DataProviderContract $dataProviderContract)
+    public function postLogin(LoginRequest $request, DataProviderContract $provider)
     {
-        $tokens = $this->app->make(LoginHandler::class)->handle($dataProviderContract);
+        $tokens = $this->app->make(LoginHandler::class)->handle($provider);
+
+        $redirect = $request->input('_redirect');
+
+        return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
+    }
+
+    public function postRegister(RegisterRequest $request, DataProviderContract $provider)
+    {
+        $tokens = $this->app->make(RegisterHandler::class)->handle($provider);
 
         $redirect = $request->input('_redirect');
 

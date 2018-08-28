@@ -35,6 +35,8 @@ return [
     'auth' => [
         'name' => '用户名',
         'password' => '密码',
+        'email' => 'email',
+        'mobile' => '手机号',
         'token' => 'Token',
         'app_key' => '应用ID',
     ]
