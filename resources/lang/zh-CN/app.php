@@ -33,6 +33,8 @@ return [
     'param_error' => '参数错误',
 
     'auth' => [
+        'name' => '用户名',
+        'password' => '密码',
         'token' => 'Token',
         'app_key' => '应用ID',
     ]

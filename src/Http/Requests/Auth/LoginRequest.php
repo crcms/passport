@@ -9,7 +9,9 @@
 
 namespace CrCms\Passport\Http\Requests\Auth;
 
+use CrCms\Passport\Models\ApplicationModel;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Class LoginRequest
@@ -33,6 +35,7 @@ class LoginRequest extends FormRequest
         return [
             'name' => ['required'],
             'password' => ['required'],
+            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
         ];
     }
 
@@ -41,6 +44,10 @@ class LoginRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return [];
+        return [
+            'name' => trans('passport::app.auth.name'),
+            'password' => trans('passport::app.auth.password'),
+            'app_key' => trans('passport::app.auth.app_key'),
+        ];
     }
 }
