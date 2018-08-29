@@ -61,7 +61,7 @@ class LoginHandler extends AbstractHandler
         /* @var UserModel $user */
         $user = $this->guard()->user();
 
-        return $this->authenticated($provider->get('app_key'), $user);
+        return $this->authenticated($request, $provider->get('app_key'), $user);
     }
 
     /**
@@ -93,15 +93,15 @@ class LoginHandler extends AbstractHandler
     }
 
     /**
+     * @param Request $request
      * @param UserModel $user
-     * @return void
      */
-    protected function authenticatedEvent(UserModel $user)
+    protected function authenticatedEvent(Request $request, UserModel $user)
     {
         event(new LoginEvent(
             $user,
             UserAttribute::AUTH_TYPE_LOGIN,
-            ['ip' => $this->request->ip(), 'agent' => $this->request->userAgent(), '_redirect' => $this->request->input('_redirect', '')]
+            ['ip' => $request->ip(), 'agent' => $request->userAgent(), '_redirect' => $request->input('_redirect', '')]
         ));
     }
 
@@ -131,15 +131,16 @@ class LoginHandler extends AbstractHandler
     }
 
     /**
+     * @param Request $request
      * @param string $appKey
      * @param UserModel $user
      * @return array
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function authenticated(string $appKey, UserModel $user): array
+    protected function authenticated(Request $request, string $appKey, UserModel $user): array
     {
         //event
-        $this->authenticatedEvent($user);
+        $this->authenticatedEvent($request, $user);
 
         //token
         $tokens = $this->token()->new($this->application($appKey), $user);
