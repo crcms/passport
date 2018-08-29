@@ -48,6 +48,12 @@ class AuthController extends Controller
         return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
     }
 
+    /**
+     * @param RegisterRequest $request
+     * @param DataProviderContract $provider
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function postRegister(RegisterRequest $request, DataProviderContract $provider)
     {
         $tokens = $this->app->make(RegisterHandler::class)->handle($provider);

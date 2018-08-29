@@ -34,8 +34,8 @@ class RegisterRequest extends FormRequest
     {
         return [
             'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
-            'name' => 'required|string|max:15|unique:users',
-            'email' => 'required|string|email|max:50|unique:users',
+            'name' => 'required|string|max:15|unique:passport_users',
+            'email' => 'required|string|email|max:50|unique:passport_users',
             'password' => 'required|string|min:6',
         ];
     }
