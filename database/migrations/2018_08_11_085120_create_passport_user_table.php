@@ -14,7 +14,7 @@ class CreatePassportUserTable extends Migration
     public function up()
     {
         Schema::create('passport_users', function (Blueprint $table) {
-            $table->unsignedBigInteger('id', true);
+            $table->bigIncrements('id');
             $table->string('name', 20)->commet('用户名');
             $table->string('nickname', 30)->nullable()->comment('昵称');
             $table->string('password', 150)->commet('密码');
