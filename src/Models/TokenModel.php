@@ -31,6 +31,11 @@ class TokenModel extends Model
     protected $primaryKey = 'token';
 
     /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $casts = [
