@@ -80,17 +80,24 @@ $(function () {
             dataType: 'json',
             url: $(this).attr('action'),
             success: function (response) {
+                $('.message').addClass('alert-info').removeClass('alert-danger');
                 if (response.data.cookie) {
                     let cookieName = response.data.cookie.name || 'token';
-                    $.cookie(cookieName, response.data.cookie.token, { expires: 7 });
+                    $.cookie(cookieName, response.data.cookie.token, { expires: parseInt(response.data.cookie.expired)/(24*60) });
                 }
+
+                $('.message').text('注册成功').show();
+
                 if (response.data.url) {
                     setTimeout(function(){
                         window.location.href = response.data.url
                     },800);
                 }
+
+                return false;
             },
             error: function (error) {
+                $('.message').addClass('alert-danger').removeClass('alert-info');
                 if (error.responseJSON.errors) {
                     $.each(error.responseJSON.errors, function (key, value) {
                         $('.message').text(value[0]).show();

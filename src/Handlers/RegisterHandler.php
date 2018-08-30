@@ -54,7 +54,7 @@ class RegisterHandler extends AbstractHandler
         $tokens = $this->token()->new($this->application($appKey), $user);
         return [
             'jwt' => $this->jwt($this->jwtToken($appKey, $user, $tokens), $tokens['expired_at']),
-            'cookie' => $tokens
+            'cookie' => $this->cookie($tokens['token'], $tokens['expired_at'])
         ];
     }
 

@@ -11,6 +11,8 @@ namespace CrCms\Passport\Http\Api\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Passport\Http\Api\Resources\LoginResource;
+use CrCms\Passport\Http\Api\Resources\RegisterResource;
 use CrCms\Passport\Http\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -37,31 +39,24 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function postLogin(LoginRequest $request, DataProviderContract $provider)
     {
         $tokens = $this->app->make(LoginHandler::class)->handle($provider);
 
-        $redirect = $request->input('_redirect');
-
-        return $this->response->data(array_merge($tokens, ['url' => combination_url($redirect, $tokens['jwt'])]));
-        return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
+        return $this->response->resource($tokens, LoginResource::class);
     }
 
     /**
      * @param RegisterRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function postRegister(RegisterRequest $request, DataProviderContract $provider)
     {
         $tokens = $this->app->make(RegisterHandler::class)->handle($provider);
 
-        $redirect = $request->input('_redirect');
-        return $this->response->data(array_merge($tokens, ['url' => combination_url($redirect, $tokens['jwt'])]));
-        return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
+        return $this->response->resource($tokens, RegisterResource::class);
     }
 
     /**
@@ -130,8 +125,6 @@ class AuthController extends Controller
     {
         $this->app->make(LogoutHandler::class)->handle($provider);
 
-        /* @todo 重置cookie token为null */
-
         return $this->response->noContent();
     }
 
@@ -143,20 +136,9 @@ class AuthController extends Controller
      */
     protected function responseOrRedirect(?string $redirect, array $jwtToken, array $cookieToken = [])
     {
-        /*if (!empty($cookieToken)) {
-            $jwtToken = array_merge($jwtToken, ['cookie_token' => $cookieToken['token']]);
-        }*/
-        $responseData = [];
-        $responseData['cookie'] = [
-            'name' => 'token',
-            'value' => $cookieToken['token']
-        ];
-        $responseData['jwt'] = $jwtToken;
-
-        return $redirect ?
-            //$this->response->redirectTo(combination_url($redirect, $jwtToken), 301) :
-            $this->response->data(array_merge($responseData, ['url' => combination_url($redirect, $jwtToken)])) :
-            $this->response->data($responseData);
+        $response = $redirect ?
+            $this->response->redirectTo(combination_url($redirect, $jwtToken), 301) :
+            $this->response->data($jwtToken);
 
         /* @todo 还需要对Cookie进行有效期限制 */
         return empty($cookieToken) ? $response : $response->withCookie('token', $cookieToken['token']);

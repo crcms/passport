@@ -53,7 +53,21 @@ trait Token
         return [
             'token' => $token,
             'token_type' => 'Bearer',
-            'expired_at' => $this->expired($expired)
+            'expired' => $this->expired($expired)
+        ];
+    }
+
+    /**
+     * @param string $token
+     * @param int $expired
+     * @return array
+     */
+    protected function cookie(string $token, int $expired): array
+    {
+        return [
+            'name' => 'token',
+            'token' => $token,
+            'expired' => $this->expired($expired)
         ];
     }
 
