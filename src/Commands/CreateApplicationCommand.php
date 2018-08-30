@@ -7,13 +7,12 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Modules\passport\src\Commands;
+namespace CrCms\Passport\Commands;
 
 use Carbon\Carbon;
 use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**

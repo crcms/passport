@@ -3,7 +3,7 @@
 namespace CrCms\Passport\Providers;
 
 use CrCms\Foundation\App\Providers\ModuleServiceProvider;
-use CrCms\Modules\passport\src\Commands\CreateApplicationCommand;
+use CrCms\Passport\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\ForgetPasswordEvent;
 use CrCms\Passport\Events\LoginEvent;
