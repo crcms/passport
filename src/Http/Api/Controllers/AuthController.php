@@ -11,7 +11,7 @@ namespace CrCms\Passport\Http\Api\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Modules\passport\src\Http\Requests\Auth\RegisterRequest;
+use CrCms\Passport\Http\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;

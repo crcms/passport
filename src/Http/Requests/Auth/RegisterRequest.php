@@ -7,7 +7,7 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Modules\passport\src\Http\Requests\Auth;
+namespace CrCms\Passport\Http\Requests\Auth;
 
 use CrCms\Passport\Models\ApplicationModel;
 use Illuminate\Foundation\Http\FormRequest;
