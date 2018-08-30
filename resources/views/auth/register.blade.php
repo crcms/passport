@@ -12,7 +12,11 @@
         body {
             background: #999999;
         }
-
+        .app-name {
+            font-family: Arial;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
         .container-fluid {
             height: 100vh;
             display: flex;
@@ -37,7 +41,7 @@
 <div class="container-fluid">
     <div class="box">
         <div class="box-heading text-center">
-            <h2>{{config('app.name')}} - 注册</h2>
+            <h2><span class="app-name">{{config('app.name')}}</span> - 注册</h2>
         </div>
         <div class="alert alert-danger message" role="alert" style="display: none"></div>
         <div class="box-body">
@@ -55,7 +59,7 @@
                 </div>
                 <div class="form-group">
                     <label>密码</label>
-                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password">
+                    <input type="password" class="form-control form-control-lg" name="password" placeholder="password">
                 </div>
                 <div class="form-group">
                     <label>&nbsp;</label>
