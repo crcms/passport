@@ -45,6 +45,7 @@ class AuthController extends Controller
 
         $redirect = $request->input('_redirect');
 
+        return $this->response->data(array_merge($tokens, ['url' => combination_url($redirect, $tokens['jwt'])]));
         return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
     }
 
@@ -59,7 +60,7 @@ class AuthController extends Controller
         $tokens = $this->app->make(RegisterHandler::class)->handle($provider);
 
         $redirect = $request->input('_redirect');
-
+        return $this->response->data(array_merge($tokens, ['url' => combination_url($redirect, $tokens['jwt'])]));
         return $this->responseOrRedirect($redirect, $tokens['jwt'], $tokens['cookie']);
     }
 
@@ -142,9 +143,20 @@ class AuthController extends Controller
      */
     protected function responseOrRedirect(?string $redirect, array $jwtToken, array $cookieToken = [])
     {
-        $response = $redirect ?
-            $this->response->redirectTo(combination_url($redirect, $jwtToken), 301) :
-            $this->response->data($jwtToken);
+        /*if (!empty($cookieToken)) {
+            $jwtToken = array_merge($jwtToken, ['cookie_token' => $cookieToken['token']]);
+        }*/
+        $responseData = [];
+        $responseData['cookie'] = [
+            'name' => 'token',
+            'value' => $cookieToken['token']
+        ];
+        $responseData['jwt'] = $jwtToken;
+
+        return $redirect ?
+            //$this->response->redirectTo(combination_url($redirect, $jwtToken), 301) :
+            $this->response->data(array_merge($responseData, ['url' => combination_url($redirect, $jwtToken)])) :
+            $this->response->data($responseData);
 
         /* @todo 还需要对Cookie进行有效期限制 */
         return empty($cookieToken) ? $response : $response->withCookie('token', $cookieToken['token']);
