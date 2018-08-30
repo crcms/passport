@@ -9,7 +9,11 @@
 
 namespace CrCms\Modules\passport\src\Commands;
 
+use Carbon\Carbon;
+use CrCms\Passport\Attributes\ApplicationAttribute;
+use CrCms\Passport\Repositories\ApplicationRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -18,6 +22,9 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class CreateApplicationCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected $name = 'make:application';
 
     /**
@@ -25,12 +32,34 @@ class CreateApplicationCommand extends Command
      */
     protected $description = 'Create a application';
 
-    
-    public function handle()
-    {
+    /**
+     * @var ApplicationRepository
+     */
+    protected $repository;
 
+    /**
+     * CreateApplicationCommand constructor.
+     * @param ApplicationRepository $repository
+     */
+    public function __construct(ApplicationRepository $repository)
+    {
+        parent::__construct();
+        $this->repository = $repository;
     }
 
+    /**
+     *
+     */
+    public function handle()
+    {
+        $this->repository->create([
+            'app_key' => Carbon::now()->getTimestamp(),
+            'app_secret' => sha1(uniqid()),
+            'status' => ApplicationAttribute::STATUS_NORMAL,
+        ]);
+
+        $this->info("Successfully created the application");
+    }
 
     /**
      * @return array

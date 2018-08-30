@@ -19,6 +19,11 @@ use CrCms\Passport\Models\ApplicationModel;
 class ApplicationRepository extends AbstractRepository
 {
     /**
+     * @var array
+     */
+    protected $guard = ['app_key', 'app_secret', 'status'];
+
+    /**
      * @return ApplicationModel
      */
     public function newModel(): ApplicationModel

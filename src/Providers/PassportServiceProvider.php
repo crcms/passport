@@ -3,6 +3,7 @@
 namespace CrCms\Passport\Providers;
 
 use CrCms\Foundation\App\Providers\ModuleServiceProvider;
+use CrCms\Modules\passport\src\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\ForgetPasswordEvent;
 use CrCms\Passport\Events\LoginEvent;
@@ -93,6 +94,20 @@ class PassportServiceProvider extends ModuleServiceProvider
         $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(LaravelServiceProvider::class);
 
-        $this->app->bind(TokenContract::class,TokenRepository::class);
+        $this->app->bind(TokenContract::class, TokenRepository::class);
+
+        $this->commands([
+            CreateApplicationCommand::class,
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function provides(): array
+    {
+        return [
+            CreateApplicationCommand::class,
+        ];
     }
 }
