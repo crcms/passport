@@ -26,18 +26,18 @@ class ForgetPasswordMail extends Mailable implements ShouldQueue
     /**
      * @var string
      */
-    public $url;
+    public $code;
 
     /**
      * RegisterMail constructor.
      * @param UserModel $userModel
-     * @param string $url
+     * @param string $code
      */
-    public function __construct(UserModel $userModel, UserBehaviorModel $userBehaviorModel,string $url)
+    public function __construct(UserModel $userModel, UserBehaviorModel $userBehaviorModel,string $code)
     {
         $this->user = $userModel;
         $this->userBehavior = $userBehaviorModel;
-        $this->url = $url;
+        $this->code = $code;
     }
 
     /**
@@ -48,7 +48,7 @@ class ForgetPasswordMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->view('passport::emails.forget_password')->with([
-            'url' => $this->url,
+            'code' => $this->code,
         ]);
     }
 }

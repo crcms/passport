@@ -10,6 +10,7 @@
 namespace CrCms\Passport\Http\Web\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
+use CrCms\Passport\Attributes\UserAttribute;
 
 /**
  * Class AuthController
@@ -31,5 +32,13 @@ class AuthController extends Controller
     public function getRegister()
     {
         return view('passport::auth.register');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getForgetPassword()
+    {
+        return view('passport::auth.forget-password', ['type' => UserAttribute::AUTH_TYPE_FORGET_PASSWORD]);
     }
 }

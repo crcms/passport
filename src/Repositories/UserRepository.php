@@ -31,6 +31,25 @@ class UserRepository extends AbstractRepository
         return app(UserModel::class);
     }
 
+    public function byMobile()
+    {
+
+    }
+
+    public function byEmail()
+    {
+
+    }
+
+    /**
+     * @param string $value
+     * @return UserModel
+     */
+    public function byMobileOrEmailOrFail(string $value)
+    {
+        return $this->where('email', $value)->orWhere('mobile', $value)->firstOrFail();
+    }
+
     /**
      * @param UserModel $user
      * @param array $data

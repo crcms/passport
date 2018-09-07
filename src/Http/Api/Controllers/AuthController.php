@@ -11,8 +11,10 @@ namespace CrCms\Passport\Http\Api\Controllers;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Passport\Handlers\CodeHandler;
 use CrCms\Passport\Http\Api\Resources\LoginResource;
 use CrCms\Passport\Http\Api\Resources\RegisterResource;
+use CrCms\Passport\Http\Requests\Auth\CodeRequest;
 use CrCms\Passport\Http\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -36,6 +38,8 @@ use CrCms\Passport\Http\Requests\Auth\UserRequest;
 class AuthController extends Controller
 {
     /**
+     * 登录
+     *
      * @param LoginRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -48,6 +52,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 注册
+     *
      * @param RegisterRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -60,6 +66,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 获取登录用户token
+     *
      * @param TokenRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -79,6 +87,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 重新刷新token
+     *
      * @param RefreshTokenRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -92,6 +102,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 验证是否登录成功
+     *
      * @param CheckLoginRequest $request
      * @param DataProviderContract $provider
      * @return mixed
@@ -105,6 +117,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 获取用户信息
+     *
      * @param UserRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\JsonResponse
@@ -117,6 +131,8 @@ class AuthController extends Controller
     }
 
     /**
+     * 用户退出
+     *
      * @param UserRequest $request
      * @param DataProviderContract $provider
      * @return \Illuminate\Http\Response
@@ -124,6 +140,17 @@ class AuthController extends Controller
     public function getLogout(UserRequest $request, DataProviderContract $provider)
     {
         $this->app->make(LogoutHandler::class)->handle($provider);
+
+        return $this->response->noContent();
+    }
+
+    /**
+     * @param CodeRequest $request
+     * @param DataProviderContract $provider
+     */
+    public function postCode(CodeRequest $request, DataProviderContract $provider)
+    {
+        $this->app->make(CodeHandler::class)->handle($provider);
 
         return $this->response->noContent();
     }

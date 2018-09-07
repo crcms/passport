@@ -7,7 +7,8 @@ Route::prefix('api/v1')->middleware(['api'])->namespace('CrCms\Passport\Http\Api
     Route::post('register', 'AuthController@postRegister')->name('passport.register.post');
     Route::post('login', 'AuthController@postLogin')->name('passport.login.post');
 
-    Route::post('forget-password', 'ForgotPasswordController@sendResetLinkEmail')->name('passport.forget_password.send_link_email.post');
+    Route::post('code', 'AuthController@postCode')->name('passport.code.post');
+    Route::post('forget-password', 'AuthController@postForgetPassword')->name('passport.forget_password.send_link_email.post');
     Route::post('reset-password-url', 'ForgotPasswordController@postResetPasswordUrl')->name('passport.forget_password.reset_password_url');
     Route::post('reset-password', 'ResetPasswordController@reset')->name('passport.reset_password.reset');
 

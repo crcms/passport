@@ -45,12 +45,13 @@ class ForgetPasswordMailBehavior extends AbstractBehavior implements BehaviorCre
      */
     public function generateRule(): string
     {
-        $urlQuery = (array)$this->userBehavior->extension;
-
-        $urlQuery['behavior_id'] = $this->userBehavior->id;
-        $urlQuery['behavior_type'] = $this->userBehavior->type;
-
-        return URL::temporarySignedRoute('user.auth.reset_password.reset', $this->userBehavior->extension->expired_at, $urlQuery);
+        return strval($this->userBehavior->extension->token);
+//        $urlQuery = (array)$this->userBehavior->extension;
+//
+//        $urlQuery['behavior_id'] = $this->userBehavior->id;
+//        $urlQuery['behavior_type'] = $this->userBehavior->type;
+//
+//        return URL::temporarySignedRoute('user.auth.reset_password.reset', $this->userBehavior->extension->expired_at, $urlQuery);
     }
 
     /**
