@@ -24,7 +24,7 @@ class CreateApplicationCommand extends Command
     /**
      * @var string
      */
-    protected $name = 'make:application';
+    protected $name = 'passport:make';
 
     /**
      * @var string
