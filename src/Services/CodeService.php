@@ -54,6 +54,8 @@ class CodeService
      */
     public function check($key, string $code): bool
     {
+        $key = $this->key($key);
+
         if ($this->cache->has($key)) {
             return $code === $this->cache->get($key);
         }
