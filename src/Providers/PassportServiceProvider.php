@@ -3,6 +3,7 @@
 namespace CrCms\Passport\Providers;
 
 use CrCms\Foundation\App\Providers\ModuleServiceProvider;
+use CrCms\Passport\Commands\ApplicationListCommand;
 use CrCms\Passport\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Events\ForgetPasswordEvent;
@@ -98,6 +99,7 @@ class PassportServiceProvider extends ModuleServiceProvider
 
         $this->commands([
             CreateApplicationCommand::class,
+            ApplicationListCommand::class,
         ]);
     }
 
@@ -108,6 +110,7 @@ class PassportServiceProvider extends ModuleServiceProvider
     {
         return [
             CreateApplicationCommand::class,
+            ApplicationListCommand::class,
         ];
     }
 }
