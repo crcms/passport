@@ -38,7 +38,7 @@ class CodeHandler extends AbstractHandler
             throw ValidationException::withMessages(['user' => $exception->getMessage()]);
         }
 
-        $code = $this->app->make(CodeService::class)->generate([$object, $type]);
+        $code = $this->app->make(CodeService::class)->generate([$object]);
 
         (new SendCodeTask)->handle($object, $user, $code, $type);
 

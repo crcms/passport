@@ -12,9 +12,11 @@ namespace CrCms\Passport\Http\Api\Controllers;
 use CrCms\Foundation\App\Http\Controllers\Controller;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\CodeHandler;
+use CrCms\Passport\Handlers\ForgetPasswordHandler;
 use CrCms\Passport\Http\Api\Resources\LoginResource;
 use CrCms\Passport\Http\Api\Resources\RegisterResource;
 use CrCms\Passport\Http\Requests\Auth\CodeRequest;
+use CrCms\Passport\Http\Requests\Auth\ForgetPasswordRequest;
 use CrCms\Passport\Http\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -153,6 +155,18 @@ class AuthController extends Controller
         $this->app->make(CodeHandler::class)->handle($provider);
 
         return $this->response->noContent();
+    }
+
+    /**
+     * @param ForgetPasswordRequest $request
+     * @param DataProviderContract $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function postForgetPassword(ForgetPasswordRequest $request, DataProviderContract $provider)
+    {
+        $this->app->make(ForgetPasswordHandler::class)->handle($provider);
+
+        return $this->response->data();
     }
 
     /**
