@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @author simon <434730525@qq.com>
- * @datetime 2018-09-07 13:40
- * @link http://www.koodpower.com/
- * @copyright Copyright &copy; 2018 Rights Reserved 快点动力
- */
-
 namespace CrCms\Passport\Tests\Feature;
 
 use CrCms\Passport\Attributes\UserAttribute;
