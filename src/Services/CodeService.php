@@ -69,7 +69,7 @@ class CodeService
      */
     protected function key($key)
     {
-        $prefix = $this->user ? $this->user->id : $this->request->ip();
+        $prefix = $this->guard->user() ? $this->guard->user()->id : $this->request->ip();
         return $prefix . (is_array($key) ? implode('.', $key) : $key);
     }
 }
