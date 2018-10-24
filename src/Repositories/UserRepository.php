@@ -21,7 +21,7 @@ class UserRepository extends AbstractRepository
     /**
      * @var array
      */
-    protected $guard = ['name', 'email', 'password', 'mobile'];
+    protected $guard = ['name', 'email', 'password', 'mobile', 'app_id'];
 
     /**
      * @return UserModel
@@ -29,16 +29,6 @@ class UserRepository extends AbstractRepository
     public function newModel(): UserModel
     {
         return app(UserModel::class);
-    }
-
-    public function byMobile()
-    {
-
-    }
-
-    public function byEmail()
-    {
-
     }
 
     /**
@@ -59,40 +49,4 @@ class UserRepository extends AbstractRepository
     {
         return $this->setGuard(['ticket', 'ticket_expired_at'])->update($data, $user->id);
     }
-
-//
-//    /**
-//     * @param UserModel $userModel
-//     * @return array
-//     */
-//    public function getTokenInfoByUser(UserModel $userModel): array
-//    {
-//        $token = Auth::guard()->fromUser($userModel);
-//
-//        return [
-//            'access_token' => $token,
-//            'token_type' => 'Bearer',
-//            'expires_in' => Auth::guard()->factory()->getTTL() * 60
-//        ];
-//    }
-//
-//    /**
-//     * @param UserModel $userModel
-//     * @return \Illuminate\Database\Eloquent\Model|null|object|static
-//     */
-//    public function getRegisterInfo(UserModel $userModel)
-//    {
-//        return $userModel->hasManyAuthInfo()
-//            ->where('type', UserAttribute::AUTH_TYPE_REGISTER)->first();
-//    }
-//
-//    /**
-//     * @param UserModel $userModel
-//     * @return Collection
-//     */
-//    public function getLoginInfo(UserModel $userModel): Collection
-//    {
-//        return $userModel->hasManyAuthInfo()
-//            ->where('type', UserAttribute::AUTH_TYPE_LOGIN)->orderBy('created_at', 'desc')->get();
-//    }
 }

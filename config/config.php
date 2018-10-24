@@ -36,4 +36,21 @@ return [
     */
 
     'refresh_ttl' => env('PASSPORT_REFRESH_TTL', 20160),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fields allowed to be registered
+    |--------------------------------------------------------------------------
+    |
+    | Set validation rules for fields that are allowed to be registered
+    | Field range: [name,mobile,email]
+    | Where name, email, mobile must be unique
+    |
+    */
+
+    'register_rule' => [
+        'name' => 'required|string|max:15|unique:passport_users',
+        'mobile' => 'required|string|max:11|min:11|unique:passport_users',
+        'email' => 'required|string|email|max:50|unique:passport_users',
+    ],
 ];

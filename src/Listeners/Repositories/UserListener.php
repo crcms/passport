@@ -9,7 +9,9 @@
 
 namespace CrCms\Passport\Listeners\Repositories;
 
+use CrCms\Foundation\App\Helpers\InstanceTrait;
 use CrCms\Passport\Attributes\UserAttribute;
+use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,16 +21,22 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserListener
 {
+    use InstanceTrait;
+
     /**
      * @param UserRepository $userRepository
      * @param array $data
      */
     public function creating(UserRepository $userRepository, array $data)
     {
-        $userRepository->addData([
-            'password' => Hash::make($data['password']),
-            'status' => UserAttribute::STATUS_INACTIVATE,
-            'register_ip' => app('request')->ip(),
-        ]);
+        $newData = [];
+        $newData['status'] = UserAttribute::STATUS_INACTIVATE;
+        $newData['register_ip'] = app('request')->ip();
+        $newData['app_id'] = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($data['app_key'])->id;
+        if (!empty($data['password'])) {
+            $newData['password'] = Hash::make($data['password']);
+        }
+
+        $userRepository->addData($newData);
     }
 }

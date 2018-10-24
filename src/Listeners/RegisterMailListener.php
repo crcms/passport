@@ -36,6 +36,10 @@ class RegisterMailListener implements ShouldQueue
 
         $userBehavior = $registerBehavior->create($registered->data);
 
+        if (empty($registered->user->email)) {
+            return ;
+        }
+
         Mail::to($registered->user->email)
             ->queue(
                 (new RegisterMail($registered->user, $registerBehavior->generateRule()))

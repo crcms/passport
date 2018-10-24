@@ -29,12 +29,9 @@ class RegisterHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        /* @var Request $request */
-        $request = $this->app->make(Request::class);
-
         $user = $this->app->make(UserRepository::class)->create($provider->all());
 
-        return $this->registered($request, $provider->get('app_key'), $user);
+        return $this->registered($provider->get('app_key'), $user);
     }
 
     /**
@@ -44,11 +41,11 @@ class RegisterHandler extends AbstractHandler
      * @return array
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function registered(Request $request, string $appKey, UserModel $user): array
+    protected function registered(string $appKey, UserModel $user): array
     {
-        $this->registeredEvent($request, $user);
+        $this->registeredEvent($user);
 
-        $this->guard()->login($user);
+        $this->guard->login($user);
 
         //token
         $tokens = $this->token()->new($this->application($appKey), $user);
@@ -63,15 +60,11 @@ class RegisterHandler extends AbstractHandler
      * @param UserModel $user
      * @return void
      */
-    protected function registeredEvent(Request $request, UserModel $user): void
+    protected function registeredEvent( UserModel $user): void
     {
         event(new RegisteredEvent(
             $user,
-            UserAttribute::AUTH_TYPE_REGISTER,
-            [
-                'ip' => $request->ip(),
-                'agent' => $request->userAgent(),
-            ]
+            UserAttribute::AUTH_TYPE_REGISTER
         ));
     }
 }
