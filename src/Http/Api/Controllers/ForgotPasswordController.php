@@ -3,7 +3,7 @@
 namespace CrCms\Passport\Http\Controllers\Api;
 
 use CrCms\Foundation\App\Http\Controllers\Controller;
-use CrCms\Passport\Http\Requests\Auth\ResetPasswordUrlRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\ResetPasswordUrlRequest;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class ForgotPasswordController extends Controller

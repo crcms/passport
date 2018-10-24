@@ -15,9 +15,9 @@ use CrCms\Passport\Handlers\CodeHandler;
 use CrCms\Passport\Handlers\ForgetPasswordHandler;
 use CrCms\Passport\Http\Api\Resources\LoginResource;
 use CrCms\Passport\Http\Api\Resources\RegisterResource;
-use CrCms\Passport\Http\Requests\Auth\CodeRequest;
-use CrCms\Passport\Http\Requests\Auth\ForgetPasswordRequest;
-use CrCms\Passport\Http\Requests\Auth\RegisterRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\CodeRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\ForgetPasswordRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\RegisterRequest;
 use CrCms\Passport\Handlers\LogoutHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\LoginHandler;
@@ -26,12 +26,12 @@ use CrCms\Passport\Handlers\RegisterHandler;
 use CrCms\Passport\Handlers\TokenHandler;
 use CrCms\Passport\Handlers\UserHandler;
 use CrCms\Passport\Http\Api\Resources\UserResource;
-use CrCms\Passport\Http\Requests\Auth\CheckLoginRequest;
-use CrCms\Passport\Http\Requests\Auth\LoginRequest;
-use CrCms\Passport\Http\Requests\Auth\RefreshTokenRequest;
-use CrCms\Passport\Http\Requests\Auth\TokenRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\CheckLoginRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\LoginRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\RefreshTokenRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\TokenRequest;
 use function CrCms\Foundation\App\Helpers\combination_url;
-use CrCms\Passport\Http\Requests\Auth\UserRequest;
+use CrCms\Passport\Http\Api\Requests\Auth\UserRequest;
 
 /**
  * Class AuthController
