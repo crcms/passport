@@ -9,6 +9,7 @@
 
 namespace CrCms\Passport\Http\Api\Requests\Auth;
 
+use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Models\ApplicationModel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,11 +33,11 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required'],
-            'password' => ['required'],
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+        $defaults = [
+            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')->where('status', ApplicationAttribute::STATUS_NORMAL)],
         ];
+
+        return array_merge($defaults, config('passport.login_rule'));
     }
 
     /**
@@ -44,10 +45,14 @@ class LoginRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return [
-            'name' => trans('passport::app.auth.name'),
-            'password' => trans('passport::app.auth.password'),
+        $defaults = [
             'app_key' => trans('passport::app.auth.app_key'),
         ];
+
+        $attributes = collect(config('passport.login_rule'))->keys()->mapWithKeys(function ($key) {
+            return [$key => trans("passport::app.auth.{$key}")];
+        })->toArray();
+
+        return array_merge($defaults, $attributes);
     }
 }

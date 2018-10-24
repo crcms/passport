@@ -65,6 +65,14 @@ class LoginHandler extends AbstractHandler
     }
 
     /**
+     * @return string
+     */
+    public function username(): string
+    {
+        return array_first(array_except(array_keys($this->config->get('passport.login_rule')), 'password'));
+    }
+
+    /**
      * @return mixed
      */
     protected function attemptLogin(Request $request)
@@ -72,14 +80,6 @@ class LoginHandler extends AbstractHandler
         return $this->guard()->attempt(
             $this->credentials($request), true
         );
-    }
-
-    /**
-     * @return string
-     */
-    public function username(): string
-    {
-        return 'name';
     }
 
     /**
@@ -127,7 +127,7 @@ class LoginHandler extends AbstractHandler
      */
     protected function credentials(Request $request)
     {
-        return $request->only($this->username(), 'password');
+        return $request->only(array_keys($this->config->get('passport.login_rule')));
     }
 
     /**

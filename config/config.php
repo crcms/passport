@@ -53,4 +53,19 @@ return [
         'mobile' => 'required|string|max:11|min:11|unique:passport_users',
         'email' => 'required|string|email|max:50|unique:passport_users',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fields allowed to be login
+    |--------------------------------------------------------------------------
+    |
+    | Set validation rules for fields that are allowed to be login
+    | Field range: [name,mobile,email,'password']
+    |
+    */
+
+    'login_rule' => [
+        'name' => ['required'],
+        'password' => ['required'],
+    ],
 ];
