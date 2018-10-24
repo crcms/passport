@@ -7,17 +7,17 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Requests\Auth;
+namespace CrCms\Passport\Http\Api\Requests\Auth;
 
 use CrCms\Passport\Models\ApplicationModel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class LoginRequest
- * @package CrCms\Passport\Http\Requests\Auth
+ * Class RefreshTokenRequest
+ * @package CrCms\Passport\Http\Api\Requests\Auth
  */
-class LoginRequest extends FormRequest
+class RefreshTokenRequest extends FormRequest
 {
     /**
      * @return bool
@@ -33,9 +33,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'password' => ['required'],
             'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            'token' => ['required',]
         ];
     }
 
@@ -45,9 +44,8 @@ class LoginRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => trans('passport::app.auth.name'),
-            'password' => trans('passport::app.auth.password'),
             'app_key' => trans('passport::app.auth.app_key'),
+            'token' => trans('passport::app.auth.token'),
         ];
     }
 }

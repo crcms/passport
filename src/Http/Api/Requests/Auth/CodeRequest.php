@@ -2,20 +2,20 @@
 
 /**
  * @author simon <crcms@crcms.cn>
- * @datetime 2018/7/6 20:38
+ * @datetime 2018-09-07 11:00
  * @link http://crcms.cn/
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Requests\Auth;
+namespace CrCms\Passport\Http\Api\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class CheckLoginRequest
- * @package CrCms\Passport\Http\Requests\Auth
+ * Class CodeRequest
+ * @package CrCms\Passport\Http\Api\Requests\Auth
  */
-class CheckLoginRequest extends FormRequest
+class CodeRequest extends FormRequest
 {
     /**
      * @return bool
@@ -31,17 +31,9 @@ class CheckLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => ['required',]
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function attributes(): array
-    {
-        return [
-            'token' => trans('passport::app.auth.token'),
+            'object' => ['required'],
+            'type' => ['required', 'integer'],
+            'app_key' => ['required'],
         ];
     }
 }

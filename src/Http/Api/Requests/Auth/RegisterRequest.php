@@ -7,8 +7,9 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Requests\Auth;
+namespace CrCms\Passport\Http\Api\Requests\Auth;
 
+use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Models\ApplicationModel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,12 +33,12 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
-            'name' => 'required|string|max:15|unique:passport_users',
-            'email' => 'required|string|email|max:50|unique:passport_users',
+        $defaults = [
+            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')->where('status', ApplicationAttribute::STATUS_NORMAL)],
             'password' => 'required|string|min:6',
         ];
+
+        return array_merge($defaults, config('passport.register_rule'));
     }
 
     /**
@@ -45,11 +46,15 @@ class RegisterRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return [
+        $defaults = [
             'app_key' => trans('passport::app.auth.app_key'),
-            'name' => trans('passport::app.auth.name'),
-            'email' => trans('passport::app.auth.email'),
             'password' => trans('passport::app.auth.password'),
         ];
+
+        $attributes = collect(config('passport.register_rule'))->keys()->mapWithKeys(function ($key) {
+            return [$key => trans("passport::app.auth.{$key}")];
+        })->toArray();
+
+        return array_merge($defaults, $attributes);
     }
 }
