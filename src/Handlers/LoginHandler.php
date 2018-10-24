@@ -127,7 +127,8 @@ class LoginHandler extends AbstractHandler
      */
     protected function credentials(Request $request)
     {
-        return $request->only(array_keys($this->config->get('passport.login_rule')));
+        //这里要加上域判断
+        return array_only($request->all(), array_keys($this->config->get('passport.login_rule')));
     }
 
     /**
