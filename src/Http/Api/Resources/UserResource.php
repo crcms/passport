@@ -26,8 +26,12 @@ class UserResource extends Resource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'nickname' => $this->nickname,
             'email' => $this->email,
             'mobile' => $this->mobile,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
