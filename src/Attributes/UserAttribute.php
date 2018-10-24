@@ -2,13 +2,11 @@
 
 namespace CrCms\Passport\Attributes;
 
-use CrCms\AttributeContract\AbstractAttributeContract;
-
 /**
  * Class UserAttribute
  * @package CrCms\Passport\Attributes
  */
-class UserAttribute extends AbstractAttributeContract
+class UserAttribute extends AbstractAttribute
 {
     /**
      * 用户状态 - 未定义

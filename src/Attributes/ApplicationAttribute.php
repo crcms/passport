@@ -2,13 +2,11 @@
 
 namespace CrCms\Passport\Attributes;
 
-use CrCms\AttributeContract\AbstractAttributeContract;
-
 /**
  * Class ApplicationAttribute
  * @package CrCms\Modules\passport\src\Attributes
  */
-class ApplicationAttribute extends AbstractAttributeContract
+class ApplicationAttribute extends AbstractAttribute
 {
     /**
      * 应用状态 - 正常
