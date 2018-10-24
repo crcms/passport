@@ -8,7 +8,7 @@
     "require": {
         "php":">=7.2.4",
         "ext-curl":"*",
-        "tymon/jwt-auth": "1.0.0-rc.2"
+        "tymon/jwt-auth": "1.0.0-rc.3"
     },
 	"autoload": {
         "files": [
