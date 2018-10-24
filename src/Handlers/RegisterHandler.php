@@ -29,7 +29,9 @@ class RegisterHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        $user = $this->app->make(UserRepository::class)->create($provider->all());
+        $user = $this->app->make(UserRepository::class)
+            ->setGuard(array_keys($this->config->get('passport.register_rule')))
+            ->create($provider->all());
 
         return $this->registered($provider->get('app_key'), $user);
     }
@@ -60,7 +62,7 @@ class RegisterHandler extends AbstractHandler
      * @param UserModel $user
      * @return void
      */
-    protected function registeredEvent( UserModel $user): void
+    protected function registeredEvent(UserModel $user): void
     {
         event(new RegisteredEvent(
             $user,
