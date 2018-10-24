@@ -33,7 +33,7 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            //'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
             'token' => ['required',]
         ];
     }
@@ -44,7 +44,7 @@ class UserRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'app_key' => trans('passport::app.auth.app_key'),
+            //'app_key' => trans('passport::app.auth.app_key'),
             'token' => trans('passport::app.auth.token'),
         ];
     }
