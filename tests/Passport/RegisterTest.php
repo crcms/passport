@@ -16,7 +16,7 @@ class RegisterTest extends TestCase
     {
         return [
             'name' => Str::random(10),
-            'password' => Str::random(20),
+            'password' => '123456',
             'mobile' => '1351234'.strval(mt_rand(1111,9999)),
             'email' => Str::random(10).'@gmail.com',
         ];
@@ -44,6 +44,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/register',[
             'app_key' => $this->getApplication()->app_key,
+            'app_secret' => $this->getApplication()->app_secret,
             'name' => $user['name'],
             'password' => $user['password'],
             'mobile' => $user['mobile'],
@@ -72,6 +73,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/register',[
             'app_key' => $this->getApplication()->app_key,
+            'app_secret' => $this->getApplication()->app_secret,
             'name' => $user['name'],
             'password' => $user['password'],
         ]);
@@ -99,6 +101,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/register',[
             'app_key' => $this->getApplication()->app_key,
+            'app_secret' => $this->getApplication()->app_secret,
             'mobile' => $user['mobile'],
             'password' => $user['password'],
         ]);
@@ -126,6 +129,7 @@ class RegisterTest extends TestCase
 
         $response = $this->postJson('api/v1/register',[
             'app_key' => $this->getApplication()->app_key,
+            'app_secret' => $this->getApplication()->app_secret,
             'email' => $user['email'],
             'password' => $user['password'],
         ]);
