@@ -9,10 +9,8 @@
 
 namespace CrCms\Passport\Http\Api\Requests\Auth;
 
-use CrCms\Passport\Attributes\ApplicationAttribute;
-use CrCms\Passport\Models\ApplicationModel;
+use CrCms\Passport\Rules\ApplicationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * Class LoginRequest
@@ -34,7 +32,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         $defaults = [
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')->where('status', ApplicationAttribute::STATUS_NORMAL)],
+            'app_key' => ['required', app()->make(ApplicationRule::class)],
         ];
 
         return array_merge($defaults, config('passport.login_rule'));
