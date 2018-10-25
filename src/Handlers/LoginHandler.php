@@ -15,6 +15,7 @@ use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
+use CrCms\Passport\Repositories\ApplicationRepository;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -127,8 +128,9 @@ class LoginHandler extends AbstractHandler
      */
     protected function credentials(Request $request)
     {
-        //这里要加上域判断
-        return array_only($request->all(), array_keys($this->config->get('passport.login_rule')));
+        /* @todo 这里要加上域判断，暂时只支持当前APP */
+        $app = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($request->input('app_key'));
+        return array_merge(array_only($request->all(), array_keys($this->config->get('passport.login_rule'))), ['app_id' => $app->id]);
     }
 
     /**
