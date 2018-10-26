@@ -55,7 +55,7 @@ class LoginTest extends TestCase
     public function testMobileLogin()
     {
         config([
-            'passport.login_rule' => [
+            'passport.login_rules' => [
                 'mobile' => 'required',
                 'password' => 'required|string|min:6',
             ]

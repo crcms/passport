@@ -63,7 +63,7 @@ class RegisterTest extends TestCase
     public function testNameRegister()
     {
         config([
-            'passport.register_rule' => [
+            'passport.register_rules' => [
                 'name' => 'required|string|max:15|unique:passport_users',
             ]
 
@@ -91,7 +91,7 @@ class RegisterTest extends TestCase
     public function testMobileRegister()
     {
         config([
-            'passport.register_rule' => [
+            'passport.register_rules' => [
                 'mobile' => 'required|string|max:11|min:11|unique:passport_users',
             ]
 
@@ -119,7 +119,7 @@ class RegisterTest extends TestCase
     public function testEmailRegister()
     {
         config([
-            'passport.register_rule' => [
+            'passport.register_rules' => [
                 'email' => 'required|string|email|max:50|unique:passport_users',
             ]
 
