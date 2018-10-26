@@ -29,7 +29,7 @@ class CreatePassportUserTable extends Migration
             $table->unsignedInteger('app_id')->default(0)->comment('注册的所属应用来源');
 
             $table->unique('name');
-            $table->unique('mobile_phone');
+            $table->unique('mobile');
             $table->unique('email');
         });
     }
