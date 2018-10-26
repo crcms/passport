@@ -70,7 +70,7 @@ class LoginHandler extends AbstractHandler
      */
     public function username(): string
     {
-        return array_first(array_except(array_keys($this->config->get('passport.login_rule')), 'password'));
+        return array_first(array_except(array_keys($this->config->get('passport.login_rules')), 'password'));
     }
 
     /**
@@ -130,7 +130,7 @@ class LoginHandler extends AbstractHandler
     {
         /* @todo 这里要加上域判断，暂时只支持当前APP */
         $app = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($request->input('app_key'));
-        return array_merge(array_only($request->all(), array_keys($this->config->get('passport.login_rule'))), ['app_id' => $app->id]);
+        return array_merge(array_only($request->all(), array_keys($this->config->get('passport.login_rules'))), ['app_id' => $app->id]);
     }
 
     /**

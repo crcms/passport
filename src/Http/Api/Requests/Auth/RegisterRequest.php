@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:6',
         ];
 
-        return array_merge($defaults, config('passport.register_rule'));
+        return array_merge($defaults, config('passport.register_rules'));
     }
 
     /**
@@ -49,7 +49,7 @@ class RegisterRequest extends FormRequest
             'password' => trans('passport::app.auth.password'),
         ];
 
-        $attributes = collect(config('passport.register_rule'))->keys()->mapWithKeys(function ($key) {
+        $attributes = collect(config('passport.register_rules'))->keys()->mapWithKeys(function ($key) {
             return [$key => trans("passport::app.auth.{$key}")];
         })->toArray();
 

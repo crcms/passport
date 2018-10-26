@@ -29,7 +29,7 @@ class LoginTest extends TestCase
     public function testNameLogin()
     {
         config([
-            'passport.login_rule' => [
+            'passport.login_rules' => [
                 'name' => 'required',
                 'password' => 'required|string|min:6',
             ]

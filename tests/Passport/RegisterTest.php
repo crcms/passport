@@ -31,7 +31,7 @@ class RegisterTest extends TestCase
     public function testNormalRegister()
     {
         config([
-            'passport.register_rule' => [
+            'passport.register_rules' => [
                 'name' => 'required|string|max:15|unique:passport_users',
                 'mobile' => 'required|string|max:11|min:11|unique:passport_users',
                 'email' => 'required|string|email|max:50|unique:passport_users',

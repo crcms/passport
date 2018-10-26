@@ -35,7 +35,7 @@ class LoginRequest extends FormRequest
             'app_key' => ['required', app()->make(ApplicationRule::class)],
         ];
 
-        return array_merge($defaults, config('passport.login_rule'));
+        return array_merge($defaults, config('passport.login_rules'));
     }
 
     /**
@@ -47,7 +47,7 @@ class LoginRequest extends FormRequest
             'app_key' => trans('passport::app.auth.app_key'),
         ];
 
-        $attributes = collect(config('passport.login_rule'))->keys()->mapWithKeys(function ($key) {
+        $attributes = collect(config('passport.login_rules'))->keys()->mapWithKeys(function ($key) {
             return [$key => trans("passport::app.auth.{$key}")];
         })->toArray();
 
