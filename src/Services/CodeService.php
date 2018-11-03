@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Services;
 
-use CrCms\Foundation\App\Helpers\InstanceTrait;
+use CrCms\Foundation\App\Helpers\InstanceConcern;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  */
 class CodeService
 {
-    use InstanceTrait;
+    use InstanceConcern;
 
     /**
      * @var Request

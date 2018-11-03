@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Listeners\Repositories;
 
-use CrCms\Foundation\App\Helpers\InstanceTrait;
+use CrCms\Foundation\App\Helpers\InstanceConcern;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\UserRepository;
@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserListener
 {
-    use InstanceTrait;
+    use InstanceConcern;
 
     /**
      * @param UserRepository $userRepository

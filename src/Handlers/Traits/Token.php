@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Handlers\Traits;
 
-use CrCms\Foundation\App\Helpers\InstanceTrait;
+use CrCms\Foundation\App\Helpers\InstanceConcern;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  */
 trait Token
 {
-    use InstanceTrait;
+    use InstanceConcern;
 
     /**
      * @param string $appKey

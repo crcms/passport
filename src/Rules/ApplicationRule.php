@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Rules;
 
-use CrCms\Foundation\App\Helpers\InstanceTrait;
+use CrCms\Foundation\App\Helpers\InstanceConcern;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
@@ -15,7 +15,7 @@ use Illuminate\Contracts\Validation\Rule;
  */
 class ApplicationRule implements Rule
 {
-    use InstanceTrait;
+    use InstanceConcern;
 
     /**
      * @var ApplicationRepository
