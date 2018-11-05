@@ -10,6 +10,7 @@
 namespace CrCms\Passport\Http\Api\Requests\Auth;
 
 use CrCms\Passport\Models\ApplicationModel;
+use CrCms\Passport\Rules\ApplicationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,7 +34,7 @@ class RefreshTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            'app_key' => ['required', app()->make(ApplicationRule::class)],
             'token' => ['required',]
         ];
     }
@@ -44,7 +45,7 @@ class RefreshTokenRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            //'app_key' => trans('passport::app.auth.app_key'),
+            'app_key' => trans('passport::app.auth.app_key'),
             'token' => trans('passport::app.auth.token'),
         ];
     }
