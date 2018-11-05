@@ -13,6 +13,7 @@ use CrCms\Foundation\App\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\Traits\Token;
 use Illuminate\Auth\AuthenticationException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Exception;
 
@@ -29,13 +30,12 @@ class RefreshTokenHandler extends AbstractHandler
      * @return array
      * @throws AuthenticationException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     * @throws \Tymon\JWTAuth\Exceptions\JWTException
      */
     public function handle(DataProviderContract $provider)
     {
-        try {
+        try /*{
             $payload = $this->guard()->checkOrFail();
-        } catch (TokenExpiredException $exception) {
+        } catch (TokenExpiredException | JWTException $exception) */{
             $payload = $this->guard()->manager()->getJWTProvider()->decode($this->guard()->getToken()->get());
         } catch (Exception $exception) {
             throw new AuthenticationException;
