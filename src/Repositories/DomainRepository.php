@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Repositories;
 
-use CrCms\Foundation\App\Repositories\AbstractRepository;
+use CrCms\Repository\AbstractRepository;
 use CrCms\Passport\Models\DomainModel;
 
 /**

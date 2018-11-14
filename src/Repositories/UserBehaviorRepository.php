@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Repositories;
 
-use CrCms\Foundation\App\Repositories\AbstractRepository;
+use CrCms\Repository\AbstractRepository;
 use CrCms\Passport\Models\UserBehaviorModel;
 
 class UserBehaviorRepository extends AbstractRepository

@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Listeners\Repositories;
 
-use CrCms\Foundation\App\Helpers\InstanceConcern;
+use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\UserRepository;

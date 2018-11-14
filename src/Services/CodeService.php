@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Services;
 
-use CrCms\Foundation\App\Helpers\InstanceConcern;
+use CrCms\Foundation\Helpers\InstanceConcern;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 

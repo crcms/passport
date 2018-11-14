@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Passport\Models\UserModel;
 use Illuminate\Support\Facades\Log;
 

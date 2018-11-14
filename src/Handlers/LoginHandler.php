@@ -9,14 +9,14 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
 use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
+//use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
@@ -27,7 +27,7 @@ use Illuminate\Validation\ValidationException;
  */
 class LoginHandler extends AbstractHandler
 {
-    use ThrottlesLogins, Token;
+    use Token;
 
     /**
      * @param DataProviderContract $provider
@@ -43,21 +43,21 @@ class LoginHandler extends AbstractHandler
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
-            return $this->throwLockout($request);
-        }
+//        if ($this->hasTooManyLoginAttempts($request)) {
+//            $this->fireLockoutEvent($request);
+//
+//            return $this->throwLockout($request);
+//        }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         if (!$this->attemptLogin($request)) {
-            $this->incrementLoginAttempts($request);
+            //$this->incrementLoginAttempts($request);
             return $this->throwLoginError();
         }
 
-        $this->clearLoginAttempts($request);
+        //$this->clearLoginAttempts($request);
 
         /* @var UserModel $user */
         $user = $this->guard()->user();

@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Handlers\Traits;
 
-use CrCms\Foundation\App\Helpers\InstanceConcern;
+use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Passport\Models\ApplicationModel;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\ApplicationRepository;

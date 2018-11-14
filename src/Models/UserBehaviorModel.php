@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Models;
 
-use CrCms\Foundation\App\Models\Model;
+use CrCms\Foundation\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserBehaviorModel extends Model

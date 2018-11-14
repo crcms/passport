@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Providers;
 
-use CrCms\Foundation\App\Providers\ModuleServiceProvider;
+use CrCms\Foundation\ModuleServiceProvider;
 use CrCms\Passport\Commands\ApplicationListCommand;
 use CrCms\Passport\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Event;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
+use CrCms\Microservice\Foundation\Application as CrCmsApplication;
 
 /**
  * Class PassportServiceProvider
@@ -53,18 +54,35 @@ class PassportServiceProvider extends ModuleServiceProvider
     /**
      * @return void
      */
+    protected function map(): void
+    {
+        if (!$this->isRunningInMicroservice()) {
+            $this->mapWebRoutes();
+            $this->mapApiRoutes();
+        } else {
+            require $this->basePath . 'routes/service.php';
+        }
+    }
+
+    /**
+     * @return void
+     */
     public function boot(): void
     {
         parent::boot();
 
         $this->publishes([
             $this->basePath . 'config/config.php' => config_path("{$this->name}.php"),
+            $this->basePath . 'config/auth.php' => config_path("auth.php"),
             $this->basePath . 'resources/lang' => resource_path("lang/vendor/{$this->name}"),
         ]);
 
-        $this->loadViewsFrom($this->basePath . '/resources/views', $this->name);
-
         $this->listens();
+
+        $this->repositoryListener();
+        if (!$this->isRunningInMicroservice()) {
+            $this->loadViewsFrom($this->basePath . '/resources/views', $this->name);
+        }
     }
 
     /**
@@ -91,9 +109,16 @@ class PassportServiceProvider extends ModuleServiceProvider
     {
         parent::register();
 
+        $this->mergeConfigFrom(
+            $this->basePath . "config/auth.php", 'auth'
+        );
+
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(LaravelServiceProvider::class);
+
+        $this->app->alias('auth',\Illuminate\Auth\AuthManager::class);
+        $this->app->alias('auth',\Illuminate\Contracts\Auth\Factory::class);
 
         $this->app->bind(TokenContract::class, TokenRepository::class);
 

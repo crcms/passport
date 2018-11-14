@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Services\CodeService;
 use Illuminate\Routing\UrlGenerator;

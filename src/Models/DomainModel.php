@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Models;
 
-use CrCms\Foundation\App\Models\Model;
+use CrCms\Foundation\Models\Model;
 
 /**
  * Class DomainModel

@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
