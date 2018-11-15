@@ -35,9 +35,9 @@ class UserRepository extends AbstractRepository
      * @param string $value
      * @return UserModel
      */
-    public function byMobileOrEmailOrFail(string $value)
+    public function byNameOrMobileOrEmailOrFail(string $value)
     {
-        return $this->where('email', $value)->orWhere('mobile', $value)->firstOrFail();
+        return $this->where('name', $value)->orWhere('email', $value)->orWhere('mobile', $value)->firstOrFail();
     }
 
     /**

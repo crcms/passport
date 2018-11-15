@@ -31,7 +31,7 @@ class UserListener
     {
         $newData = [];
         $newData['status'] = UserAttribute::STATUS_INACTIVATE;
-        $newData['register_ip'] = app('request')->ip();
+        //$newData['register_ip'] = app('request')->ip();
         $newData['app_id'] = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($data['app_key'])->id;
         if (!empty($data['password'])) {
             $newData['password'] = Hash::make($data['password']);

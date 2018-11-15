@@ -7,7 +7,7 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Api\Resources;
+namespace CrCms\Passport\Microservice\Resources;
 
 use CrCms\Foundation\Resources\Resource;
 

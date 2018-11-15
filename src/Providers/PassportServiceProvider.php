@@ -113,12 +113,12 @@ class PassportServiceProvider extends ModuleServiceProvider
             $this->basePath . "config/auth.php", 'auth'
         );
 
-        $this->app->register(AuthServiceProvider::class);
-        $this->app->register(PasswordResetServiceProvider::class);
-        $this->app->register(LaravelServiceProvider::class);
+//        $this->app->register(AuthServiceProvider::class);
+//        $this->app->register(PasswordResetServiceProvider::class);
+//        $this->app->register(LaravelServiceProvider::class);
 
-        $this->app->alias('auth',\Illuminate\Auth\AuthManager::class);
-        $this->app->alias('auth',\Illuminate\Contracts\Auth\Factory::class);
+//        $this->app->alias('auth',\Illuminate\Auth\AuthManager::class);
+//        $this->app->alias('auth',\Illuminate\Contracts\Auth\Factory::class);
 
         $this->app->bind(TokenContract::class, TokenRepository::class);
 

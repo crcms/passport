@@ -9,6 +9,7 @@
 
 namespace CrCms\Passport\Models;
 
+use CrCms\Foundation\Models\Model;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\ForgetPasswordEvent;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,9 +21,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * Class UserModel
  * @package CrCms\Passport\Models
  */
-class UserModel extends Authenticatable implements JWTSubject
+class UserModel extends Model
 {
-    use SoftDeletes, Notifiable;
+    use SoftDeletes;
 
     /**
      * @var string

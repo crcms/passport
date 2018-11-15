@@ -1,15 +1,22 @@
 <?php
 
+/**
+ * @author simon <simon@crcms.cn>
+ * @datetime 2018-08-29 07:25
+ * @link http://crcms.cn/
+ * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
+ */
+
 namespace CrCms\Passport\Microservice\DataProviders;
 
 use CrCms\Foundation\Transporters\AbstractValidateDataProvider;
 use CrCms\Passport\Rules\ApplicationRule;
 
 /**
- * Class LoginDataProvider
- * @package CrCms\Passport\Microservice\DataProviders
+ * Class RegisterRequest
+ * @package CrCms\Modules\passport\src\Http\Requests\Auth
  */
-class LoginDataProvider extends AbstractValidateDataProvider
+class RegisterDataProvider extends AbstractValidateDataProvider
 {
     /**
      * @return array
@@ -18,9 +25,10 @@ class LoginDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => ['required', app(ApplicationRule::class)],
+            'password' => 'required|string|min:6',
         ];
 
-        return array_merge($defaults, config('passport.login_rules'));
+        return array_merge($defaults, config('passport.register_rules'));
     }
 
     /**
@@ -30,9 +38,10 @@ class LoginDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => trans('passport::app.auth.app_key'),
+            'password' => trans('passport::app.auth.password'),
         ];
 
-        $attributes = collect(config('passport.login_rules'))->keys()->mapWithKeys(function ($key) {
+        $attributes = collect(config('passport.register_rules'))->keys()->mapWithKeys(function ($key) {
             return [$key => trans("passport::app.auth.{$key}")];
         })->toArray();
 

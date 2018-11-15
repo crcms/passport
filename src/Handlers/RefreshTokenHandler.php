@@ -11,10 +11,11 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Microservice\Server\Exceptions\BadRequestException;
 use CrCms\Passport\Handlers\Traits\Token;
-use Illuminate\Auth\AuthenticationException;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use CrCms\Passport\Tasks\Jwt\CheckTask;
+use CrCms\Passport\Tasks\Jwt\CreateTask;
+use CrCms\Passport\Tasks\Jwt\ParserTask;
 use Exception;
 
 /**
@@ -28,21 +29,22 @@ class RefreshTokenHandler extends AbstractHandler
     /**
      * @param DataProviderContract $provider
      * @return array
-     * @throws AuthenticationException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function handle(DataProviderContract $provider)
+    public function handle(DataProviderContract $provider): array
     {
-        try /*{
-            $payload = $this->guard()->checkOrFail();
-        } catch (TokenExpiredException | JWTException $exception) */{
-            $payload = $this->guard()->manager()->getJWTProvider()->decode($this->guard()->getToken()->get());
+        try {
+            $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
         } catch (Exception $exception) {
-            throw new AuthenticationException;
+            throw new BadRequestException($exception->getMessage());
         }
 
-        $tokens = $this->token()->refresh($this->application($provider->get('app_key')), $payload['token']);
+        if (!$this->app->make(CheckTask::class)->handle($token)) {
+            throw new BadRequestException('Token error');
+        }
 
-        return $this->jwt($this->guard()->setTTL($tokens['expired_at'])->refresh(), $tokens['expired_at']);
+        return $this->app->make(CreateTask::class)->handle(
+            $token->getClaim('jti'),
+            $token->getClaim('aud')
+        );
     }
 }

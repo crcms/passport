@@ -5,7 +5,6 @@ namespace CrCms\Passport\Rules;
 use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Foundation\Transporters\AbstractDataProvider;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Microservice\Transporters\DataProvider;
 use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Repository\Exceptions\ResourceNotFoundException;
@@ -33,7 +32,7 @@ class ApplicationRule implements Rule
      * ApplicationRule constructor.
      * @param ApplicationRepository $repository
      */
-    public function __construct(ApplicationRepository $repository, DataProvider $dataProvider)
+    public function __construct(ApplicationRepository $repository, DataProviderContract $dataProvider)
     {
         $this->repository = $repository;
         $this->data = $dataProvider;

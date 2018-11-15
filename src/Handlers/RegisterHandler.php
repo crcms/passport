@@ -16,6 +16,7 @@ use CrCms\Passport\Events\RegisteredEvent;
 use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
+use CrCms\Passport\Tasks\Jwt\CreateTask;
 use Illuminate\Http\Request;
 
 class RegisterHandler extends AbstractHandler
@@ -32,6 +33,8 @@ class RegisterHandler extends AbstractHandler
         $user = $this->app->make(UserRepository::class)
             ->setGuard(array_keys($this->config->get('passport.register_rules')))
             ->create($provider->all());
+
+        return $this->app->make(CreateTask::class)->handle($user->id, $provider->get('app_key'));
 
         return $this->registered($provider->get('app_key'), $user);
     }
