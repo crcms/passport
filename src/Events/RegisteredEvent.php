@@ -17,26 +17,4 @@ use Illuminate\Http\Request;
  */
 class RegisteredEvent extends BehaviorCreatedEvent
 {
-    /**
-     * RegisteredEvent constructor.
-     * @param UserModel $userModel
-     * @param int $type
-     * @param array $data
-     */
-    public function __construct(UserModel $userModel, int $type, array $data = [])
-    {
-        parent::__construct($userModel, $type, $data);
-        $this->setDefaultData();
-    }
-
-    /**
-     * @return void
-     */
-    protected function setDefaultData(): void
-    {
-        /* @var Request $request */
-        $request = app('request');
-        $this->data['ip'] = $request->ip();
-        $this->data['agent'] = $request->userAgent();
-    }
 }

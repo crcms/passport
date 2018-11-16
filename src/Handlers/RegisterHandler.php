@@ -13,16 +13,12 @@ use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\RegisteredEvent;
-use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
-use Illuminate\Http\Request;
 
 class RegisterHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return array
@@ -34,42 +30,25 @@ class RegisterHandler extends AbstractHandler
             ->setGuard(array_keys($this->config->get('passport.register_rules')))
             ->create($provider->all());
 
-        return $this->app->make(CreateTask::class)->handle($user->id, $provider->get('app_key'));
+        $appKey = $provider->get('app_key');
 
-        return $this->registered($provider->get('app_key'), $user);
+        $tokens = $this->app->make(CreateTask::class)->handle($user->id, $appKey);
+
+        $this->registeredEvent($provider, $user);
+
+        return $tokens;
     }
 
     /**
-     * @param Request $request
-     * @param string $appKey
+     * @param DataProviderContract $provider
      * @param UserModel $user
-     * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function registered(string $appKey, UserModel $user): array
+    protected function registeredEvent(DataProviderContract $provider, UserModel $user): void
     {
-        $this->registeredEvent($user);
-
-        $this->guard->login($user);
-
-        //token
-        $tokens = $this->token()->new($this->application($appKey), $user);
-        return [
-            'jwt' => $this->jwt($this->jwtToken($appKey, $user, $tokens), $tokens['expired_at']),
-            'cookie' => $this->cookie($tokens['token'], $tokens['expired_at'])
-        ];
-    }
-
-    /**
-     * @param Request $request
-     * @param UserModel $user
-     * @return void
-     */
-    protected function registeredEvent(UserModel $user): void
-    {
-        event(new RegisteredEvent(
+        $this->event->dispatch(new RegisteredEvent(
             $user,
-            UserAttribute::AUTH_TYPE_REGISTER
+            UserAttribute::AUTH_TYPE_REGISTER,
+            ['ip' => $provider->get('ip', '0.0.0.0'), 'agent' => $provider->get('user_agent')]
         ));
     }
 }

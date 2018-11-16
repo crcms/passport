@@ -12,7 +12,6 @@ namespace CrCms\Passport\Handlers;
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Microservice\Server\Exceptions\BadRequestException;
-use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
@@ -20,12 +19,10 @@ use Exception;
 
 /**
  * Class RefreshTokenHandler
- * @package CrCms\Modules\passport\src\Handlers
+ * @package CrCms\Passport\Handlers
  */
 class RefreshTokenHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return array

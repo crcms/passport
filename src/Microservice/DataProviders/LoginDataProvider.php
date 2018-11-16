@@ -18,6 +18,7 @@ class LoginDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => ['required', app(ApplicationRule::class)],
+            'ip' => ['ip'],
         ];
 
         return array_merge($defaults, config('passport.login_rules'));

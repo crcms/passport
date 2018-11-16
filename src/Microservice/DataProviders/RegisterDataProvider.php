@@ -26,6 +26,7 @@ class RegisterDataProvider extends AbstractValidateDataProvider
         $defaults = [
             'app_key' => ['required', app(ApplicationRule::class)],
             'password' => 'required|string|min:6',
+            'ip' => ['ip'],
         ];
 
         return array_merge($defaults, config('passport.register_rules'));

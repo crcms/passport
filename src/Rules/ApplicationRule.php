@@ -46,7 +46,7 @@ class ApplicationRule implements Rule
     public function passes($attribute, $value): bool
     {
         try {
-            $application = $this->repository->byAppKeyOrFail($value);
+            $application = $this->repository->cache(10)->byAppKeyOrFail($value);
         } catch (ResourceNotFoundException $exception) {
             return false;
         }

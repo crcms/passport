@@ -11,19 +11,15 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
-use Lcobucci\JWT\ValidationData;
 
 /**
  * Class CheckLoginHandler
- * @package CrCms\Passport\Handlers\SSO
+ * @package CrCms\Passport\Handlers
  */
 class CheckLoginHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return bool
