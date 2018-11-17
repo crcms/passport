@@ -21,10 +21,6 @@ use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use Illuminate\Support\Facades\Event;
-use Tymon\JWTAuth\Providers\LaravelServiceProvider;
-use Illuminate\Auth\AuthServiceProvider;
-use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
-use CrCms\Microservice\Foundation\Application as CrCmsApplication;
 
 /**
  * Class PassportServiceProvider
@@ -73,16 +69,12 @@ class PassportServiceProvider extends ModuleServiceProvider
 
         $this->publishes([
             $this->basePath . 'config/config.php' => config_path("{$this->name}.php"),
-            $this->basePath . 'config/auth.php' => config_path("auth.php"),
             $this->basePath . 'resources/lang' => resource_path("lang/vendor/{$this->name}"),
         ]);
 
         $this->listens();
 
         $this->repositoryListener();
-        if (!$this->isRunningInMicroservice()) {
-            $this->loadViewsFrom($this->basePath . '/resources/views', $this->name);
-        }
     }
 
     /**
@@ -108,10 +100,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     public function register(): void
     {
         parent::register();
-
-        $this->mergeConfigFrom(
-            $this->basePath . "config/auth.php", 'auth'
-        );
 
 //        $this->app->register(AuthServiceProvider::class);
 //        $this->app->register(PasswordResetServiceProvider::class);
