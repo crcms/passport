@@ -9,17 +9,14 @@
 
 namespace CrCms\Passport\Handlers;
 
-use App\Modules\Sms\Handlers\CheckHandler;
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Microservice\Server\Exceptions\BadRequestException;
 use CrCms\Microservice\Server\Exceptions\UnauthorizedException;
-use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
-use Lcobucci\JWT\ValidationData;
 
 /**
  * Class UserHandler
@@ -27,8 +24,6 @@ use Lcobucci\JWT\ValidationData;
  */
 class UserHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return UserModel
@@ -36,7 +31,6 @@ class UserHandler extends AbstractHandler
     public function handle(DataProviderContract $provider): UserModel
     {
         /* @var \Lcobucci\JWT\Token $token */
-
         try {
             $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
         } catch (\Exception $exception) {
