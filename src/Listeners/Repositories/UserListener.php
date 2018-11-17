@@ -39,4 +39,23 @@ class UserListener
 
         $userRepository->addData($newData);
     }
+
+    /**
+     * @param UserRepository $userRepository
+     * @param array $data
+     */
+    public function updating(UserRepository $userRepository, array $data)
+    {
+        $storeData = $userRepository->getData();
+        unset($storeData['app_id']);
+
+        $newData = [];
+        if (!empty($data['password'])) {
+            $newData['password'] = Hash::make($data['password']);
+        } else {
+            unset($storeData['password']);
+        }
+
+        $userRepository->setData(array_merge($storeData, $newData));
+    }
 }

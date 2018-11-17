@@ -17,7 +17,7 @@ use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
 
-class RegisterHandler extends AbstractHandler
+final class RegisterHandler extends AbstractHandler
 {
     /**
      * @param DataProviderContract $provider

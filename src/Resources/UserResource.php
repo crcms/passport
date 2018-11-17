@@ -7,13 +7,13 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Microservice\Resources;
+namespace CrCms\Passport\Resources;
 
 use CrCms\Foundation\Resources\Resource;
 
 /**
  * Class UserResource
- * @package CrCms\Passport\Http\Api\Resources
+ * @package CrCms\Passport\Resources
  */
 class UserResource extends Resource
 {

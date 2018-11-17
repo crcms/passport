@@ -21,7 +21,7 @@ use Exception;
  * Class RefreshTokenHandler
  * @package CrCms\Passport\Handlers
  */
-class RefreshTokenHandler extends AbstractHandler
+final class RefreshTokenHandler extends AbstractHandler
 {
     /**
      * @param DataProviderContract $provider

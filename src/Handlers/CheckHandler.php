@@ -15,10 +15,10 @@ use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
 
 /**
- * Class CheckLoginHandler
+ * Class CheckHandler
  * @package CrCms\Passport\Handlers
  */
-class CheckLoginHandler extends AbstractHandler
+final class CheckHandler extends AbstractHandler
 {
     /**
      * @param DataProviderContract $provider

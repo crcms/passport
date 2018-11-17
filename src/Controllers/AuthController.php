@@ -1,18 +1,17 @@
 <?php
 
-namespace CrCms\Passport\Microservice\Controllers;
+namespace CrCms\Passport\Controllers;
 
-use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Microservice\Routing\Controller;
-use CrCms\Passport\Handlers\CheckLoginHandler;
+use CrCms\Passport\Handlers\CheckHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
 use CrCms\Passport\Handlers\RegisterHandler;
 use CrCms\Passport\Handlers\UserHandler;
-use CrCms\Passport\Microservice\DataProviders\RegisterDataProvider;
-use CrCms\Passport\Microservice\DataProviders\TokenDataProvider;
-use CrCms\Passport\Microservice\Resources\UserResource;
-use CrCms\Passport\Microservice\DataProviders\LoginDataProvider;
+use CrCms\Passport\DataProviders\RegisterDataProvider;
+use CrCms\Passport\DataProviders\TokenDataProvider;
+use CrCms\Passport\Resources\UserResource;
+use CrCms\Passport\DataProviders\LoginDataProvider;
 
 /**
  * Class AuthController
@@ -48,7 +47,7 @@ class AuthController extends Controller
      */
     public function check(TokenDataProvider $provider)
     {
-        return $this->app->make(CheckLoginHandler::class)->handle($provider);
+        return $this->app->make(CheckHandler::class)->handle($provider);
     }
 
     /**

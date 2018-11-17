@@ -25,7 +25,7 @@ use Illuminate\Validation\ValidationException;
  * Class LoginHandler
  * @package CrCms\Passport\Actions
  */
-class LoginHandler extends AbstractHandler
+final class LoginHandler extends AbstractHandler
 {
     /**
      * @param DataProviderContract $provider

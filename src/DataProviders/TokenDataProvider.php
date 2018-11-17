@@ -7,34 +7,24 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Api\Requests\Auth;
+namespace CrCms\Passport\DataProviders;
 
-use CrCms\Passport\Models\ApplicationModel;
+use CrCms\Foundation\Transporters\AbstractValidateDataProvider;
 use CrCms\Passport\Rules\ApplicationRule;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
- * Class RefreshTokenRequest
- * @package CrCms\Passport\Http\Api\Requests\Auth
+ * Class TokenDataProvider
+ * @package CrCms\Passport\DataProviders
  */
-class RefreshTokenRequest extends FormRequest
+class TokenDataProvider extends AbstractValidateDataProvider
 {
-    /**
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * @return array
      */
     public function rules(): array
     {
         return [
-            'app_key' => ['required', app()->make(ApplicationRule::class)],
+            'app_key' => ['required', app(ApplicationRule::class)],
             'token' => ['required',]
         ];
     }

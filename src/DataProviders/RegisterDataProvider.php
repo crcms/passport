@@ -7,33 +7,26 @@
  * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
  */
 
-namespace CrCms\Passport\Http\Api\Requests\Auth;
+namespace CrCms\Passport\DataProviders;
 
+use CrCms\Foundation\Transporters\AbstractValidateDataProvider;
 use CrCms\Passport\Rules\ApplicationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class RegisterRequest
- * @package CrCms\Modules\passport\src\Http\Requests\Auth
+ * Class RegisterDataProvider
+ * @package CrCms\Passport\DataProviders
  */
-class RegisterRequest extends FormRequest
+class RegisterDataProvider extends AbstractValidateDataProvider
 {
-    /**
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * @return array
      */
     public function rules(): array
     {
         $defaults = [
-            'app_key' => ['required', app()->make(ApplicationRule::class)],
+            'app_key' => ['required', app(ApplicationRule::class)],
             'password' => 'required|string|min:6',
+            'ip' => ['ip'],
         ];
 
         return array_merge($defaults, config('passport.register_rules'));
