@@ -43,11 +43,13 @@ class AuthController extends Controller
 
     /**
      * @param TokenDataProvider $provider
-     * @return mixed
+     * @return \CrCms\Microservice\Server\Http\Response
      */
     public function check(TokenDataProvider $provider)
     {
-        return $this->app->make(CheckHandler::class)->handle($provider);
+        $this->app->make(CheckHandler::class)->handle($provider);
+
+        return $this->response->noContent();
     }
 
     /**

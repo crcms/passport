@@ -11,6 +11,7 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Microservice\Server\Exceptions\UnauthorizedException;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
 
@@ -27,16 +28,15 @@ final class CheckHandler extends AbstractHandler
     public function handle(DataProviderContract $provider): bool
     {
         /* @var \Lcobucci\JWT\Token $token */
-        try {
-            $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
-        } catch (\Exception $exception) {
-            return false;
+        $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
+
+        if (
+            !$this->app->make(CheckTask::class)->handle($token) ||
+            $token->isExpired()
+        ) {
+            throw new UnauthorizedException("unauthorized");
         }
 
-        if (!$this->app->make(CheckTask::class)->handle($token)) {
-            return false;
-        }
-
-        return !$token->isExpired();
+        return true;
     }
 }
