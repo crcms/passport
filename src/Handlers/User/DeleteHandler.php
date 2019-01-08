@@ -18,6 +18,6 @@ final class DeleteHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): int
     {
-        return $this->app->make(UserRepository::class)->delete($provider->get('user'));
+        return $this->app->make(UserRepository::class)->delete($provider->get('id'));
     }
 }
