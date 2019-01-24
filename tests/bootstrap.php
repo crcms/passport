@@ -20,10 +20,16 @@ $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 $app->alias('cache', \Illuminate\Contracts\Cache\Factory::class);
 $app->alias('cache.store', \Illuminate\Cache\Repository::class);
 $app->alias('cache.store',  \Illuminate\Contracts\Cache\Repository::class);
+$app->alias('validator',  \Illuminate\Validation\Factory::class);
+$app->alias('validator',  \Illuminate\Contracts\Validation\Factory::class);
 
 //config
 $app->singleton('config', function () use ($config) {
     return new \Illuminate\Config\Repository([
+        'app' => [
+            'locale' => 'zh-CN',
+            'fallback_locale' => 'en',
+        ],
         'passport' => $config,
         'database' => [
             'default' => 'mysql',
@@ -97,7 +103,7 @@ $app->singleton('config', function () use ($config) {
 //$Route = Mockery::mock('Illuminate\Support\Facades\Route');
 //$Route->shouldReceive('namespace','register','group');
 
-$app->instance('path.lang', './');
+$app->instance('path.lang', __DIR__.'./');
 
 function config_path($path = null)
 {
@@ -113,16 +119,28 @@ function resource_path($path = null)
 {
     return is_null($path) ? __DIR__ : __DIR__.'/'.$path;
 }
+function app() {
+    return \Illuminate\Container\Container::getInstance();
+}
+
 
 function config($key,$default = null)
 {
     \Illuminate\Container\Container::getInstance()->make('config')->get($key,$default);
 }
 
-function trans($key)
+
+function trans($key = null, $replace = [], $locale = null)
 {
-    \Illuminate\Container\Container::getInstance()->make('translator')->trans($key);
+
+    return \Illuminate\Container\Container::getInstance()->make('translator')->trans($key, $replace, $locale);
 }
+
+//$request = Mockery::mock('request');
+//$request->shouldReceive('all')->andReturn([]);
+//
+//$app->instance('request',$request);
+
 
 //service providers
 $providers = [
@@ -135,6 +153,8 @@ $providers = [
     \Illuminate\Bus\BusServiceProvider::class,
     \Illuminate\Cache\CacheServiceProvider::class,
     \Illuminate\Database\MigrationServiceProvider::class,
+    \Illuminate\Validation\ValidationServiceProvider::class,
+    \CrCms\Foundation\Transporters\DataServiceProvider::class,
     \CrCms\Repository\RepositoryServiceProvider::class,
     \CrCms\Passport\Providers\PassportServiceProvider::class,
 ];
@@ -148,11 +168,15 @@ foreach ($providers as $provider) {
 }
 
 foreach ($providers as $provider) {
+    if (get_class($provider) === \CrCms\Foundation\Transporters\DataServiceProvider::class) {
+        continue;
+    }
     if (method_exists($provider, 'boot')) {
         $provider->boot();
     }
 
 }
+
 
 //\Illuminate\Support\Facades\Artisan::call('migrate:install');
 

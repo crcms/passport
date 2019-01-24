@@ -24,9 +24,9 @@ class TokenDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => ['required', $this->app->make(ApplicationRule::class)],
-            'app_secret' => ['required'],
-            'token' => ['required',]
+            'app_key' => ['bail','required', $this->app->make(ApplicationRule::class)],
+            'app_secret' => ['bail','required'],
+            'token' => ['bail','required',]
         ];
     }
 
