@@ -33,7 +33,28 @@ class UserApplicationTaskTest extends TestCase
 
         $this->assertInstanceOf(Collection::class,$result);
 
-        $this->assertEquals(DB::table('passport_applications_domains')->count(),$result->count());
+        $count = DB::table('passport_applications_domains')->select('app_key')->distinct()->get()->count();
+        $this->assertEquals($count,$result->count());
+    }
+
+    /**
+     * @depends testUserApplications
+     *
+     * @throws \Exception
+     */
+    public function testDomainNullApplications()
+    {
+        DB::table('passport_applications_domains')->delete();
+
+        $user = UserModel::first();
+
+        $task = new UserApplicationTask();
+        /* @var UserModel $user */
+        $result = $task->handle($user);
+
+        $this->assertInstanceOf(Collection::class,$result);
+
+        $this->assertEquals($user->belongsToManyApplication()->count(),$result->count());
     }
 
     protected function createDomainAndApplication(UserModel $user)

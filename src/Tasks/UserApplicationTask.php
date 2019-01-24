@@ -57,7 +57,9 @@ final class UserApplicationTask extends AbstractTask
         })->map(function (ApplicationModel $application) use ($applicationRepository, $domainRepository) {
             return $applicationRepository->domainsByApplication($application)->map(function (DomainModel $domain) use ($domainRepository) {
                 return $domainRepository->applicationsByDomain($domain);
-            })->flatten(1);
-        })->flatten(1);
+            })->flatten();
+        })->flatten()->merge($applications)->uniqueStrict(function(ApplicationModel $application){
+            return $application->app_key;
+        });
     }
 }
