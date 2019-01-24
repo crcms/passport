@@ -11,8 +11,7 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Microservice\Server\Exceptions\BadRequestException;
-use CrCms\Microservice\Server\Exceptions\UnauthorizedException;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
@@ -34,17 +33,16 @@ class UserHandler extends AbstractHandler
         try {
             $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
         } catch (\Exception $exception) {
-            throw new BadRequestException($exception->getMessage());
+            throw new PassportException($exception->getMessage());
         }
 
         if (
             !$this->app->make(CheckTask::class)->handle($token) ||
             $token->isExpired()
         ) {
-            throw new UnauthorizedException('unauthorized');
+            throw new PassportException('unauthorized');
         }
 
-        $userId = $token->getClaim('jti');
-        return $this->app->make(UserRepository::class)->byIntIdOrFail($userId);
+        return $this->app->make(UserRepository::class)->byIntIdOrFail($token->getClaim('uid'));
     }
 }

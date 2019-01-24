@@ -11,7 +11,7 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Microservice\Server\Exceptions\BadRequestException;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
@@ -32,16 +32,22 @@ final class RefreshTokenHandler extends AbstractHandler
         try {
             $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
         } catch (Exception $exception) {
-            throw new BadRequestException($exception->getMessage());
+            throw new PassportException($exception->getMessage());
         }
 
         if (!$this->app->make(CheckTask::class)->handle($token)) {
-            throw new BadRequestException('Token error');
+            throw new PassportException('Token error');
         }
 
-        return $this->app->make(CreateTask::class)->handle(
-            $token->getClaim('jti'),
+        $tokens = $this->app->make(CreateTask::class)->handle(
+            $token->getClaim('uid'),
             $token->getClaim('aud')
         );
+
+        // 加入黑名单
+//        $this->cache->forever()
+
+        return $tokens;
+
     }
 }

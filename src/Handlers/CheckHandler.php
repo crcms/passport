@@ -11,7 +11,7 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Microservice\Server\Exceptions\UnauthorizedException;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
 
@@ -34,7 +34,7 @@ final class CheckHandler extends AbstractHandler
             !$this->app->make(CheckTask::class)->handle($token) ||
             $token->isExpired()
         ) {
-            throw new UnauthorizedException("unauthorized");
+            throw new PassportException("unauthorized");
         }
 
         return true;

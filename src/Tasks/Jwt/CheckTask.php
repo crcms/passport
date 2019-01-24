@@ -19,6 +19,8 @@ class CheckTask extends AbstractTask
         /* @var Token $token */
         $token = $params[0];
 //        $ignoreExpired = $params[1] ?? ;
+        dd($token);
+        if ($this->cache->has('jwt_'))
 
         return $token->verify(new Sha256(), $this->config->get('passport.secret'));
 
