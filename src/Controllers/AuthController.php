@@ -2,7 +2,6 @@
 
 namespace CrCms\Passport\Controllers;
 
-//use CrCms\Microservice\Routing\Controller;
 use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\Handlers\CheckHandler;

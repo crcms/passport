@@ -12,7 +12,6 @@ use CrCms\Passport\Handlers\User\DeleteHandler;
 use CrCms\Passport\Handlers\User\ListHandler;
 use CrCms\Passport\Handlers\User\StoreHandler;
 use CrCms\Passport\Handlers\User\UpdateHandler;
-//use CrCms\Microservice\Routing\Controller;
 use CrCms\Passport\Resources\UserResource;
 
 /**
