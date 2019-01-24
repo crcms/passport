@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CrCms\Passport\Tests\Auth\LoginTest" file="/var/www/packages/passport/tests/Auth/LoginTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.194934">
+    <testcase name="testLoginError" class="CrCms\Passport\Tests\Auth\LoginTest" classname="CrCms.Passport.Tests.Auth.LoginTest" file="/var/www/packages/passport/tests/Auth/LoginTest.php" line="32" assertions="1" time="0.031940"/>
+    <testcase name="testLoginUserError" class="CrCms\Passport\Tests\Auth\LoginTest" classname="CrCms.Passport.Tests.Auth.LoginTest" file="/var/www/packages/passport/tests/Auth/LoginTest.php" line="47" assertions="1" time="0.055303"/>
+    <testcase name="testLoginSuccess" class="CrCms\Passport\Tests\Auth\LoginTest" classname="CrCms.Passport.Tests.Auth.LoginTest" file="/var/www/packages/passport/tests/Auth/LoginTest.php" line="63" assertions="3" time="0.107691"/>
+  </testsuite>
+</testsuites>

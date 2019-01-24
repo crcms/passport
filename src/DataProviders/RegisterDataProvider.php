@@ -11,6 +11,7 @@ namespace CrCms\Passport\DataProviders;
 
 use CrCms\Foundation\Transporters\AbstractValidateDataProvider;
 use CrCms\Passport\Rules\ApplicationRule;
+use Illuminate\Support\Collection;
 
 /**
  * Class RegisterDataProvider
@@ -24,7 +25,7 @@ class RegisterDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         $defaults = [
-            'app_key' => ['required', app(ApplicationRule::class)],
+            'app_key' => ['required', $this->app->make(ApplicationRule::class)],
             'password' => 'required|string|min:6',
             'ip' => ['ip'],
         ];
@@ -42,7 +43,7 @@ class RegisterDataProvider extends AbstractValidateDataProvider
             'password' => trans('passport::app.auth.password'),
         ];
 
-        $attributes = collect(config('passport.register_rules'))->keys()->mapWithKeys(function ($key) {
+        $attributes = Collection::make(config('passport.register_rules'))->keys()->mapWithKeys(function ($key) {
             return [$key => trans("passport::app.auth.{$key}")];
         })->toArray();
 

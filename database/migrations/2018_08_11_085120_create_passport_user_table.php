@@ -24,9 +24,7 @@ class CreatePassportUserTable extends Migration
             $table->unsignedBigInteger('created_at')->default(0)->comment('创建时间');
             $table->unsignedBigInteger('updated_at')->default(0)->comment('修改时间');
             $table->unsignedBigInteger('deleted_at')->default(null)->nullable()->comment('删除时间');
-            $table->string('remember_token', 150)->nullable()->comment('remember token');
             $table->ipAddress('register_ip')->nullable()->commnet('Register IpAddress');
-            $table->unsignedInteger('app_id')->default(0)->comment('注册的所属应用来源');
 
             $table->unique('name');
             $table->unique('mobile');

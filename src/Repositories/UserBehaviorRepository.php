@@ -26,6 +26,6 @@ class UserBehaviorRepository extends AbstractRepository
      */
     public function newModel(): UserBehaviorModel
     {
-        return app(UserBehaviorModel::class);
+        return new UserBehaviorModel;
     }
 }

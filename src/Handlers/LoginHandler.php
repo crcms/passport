@@ -11,13 +11,14 @@ namespace CrCms\Passport\Handlers;
 
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Microservice\Server\Exceptions\UnprocessableEntityException;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
-use Illuminate\Http\Request;
+use CrCms\Passport\Tasks\UserApplicationTask;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -28,6 +29,20 @@ use Illuminate\Validation\ValidationException;
 final class LoginHandler extends AbstractHandler
 {
     /**
+     * @var UserRepository
+     */
+    protected $repository;
+
+    /**
+     * LoginHandler constructor.
+     * @param UserRepository $repository
+     */
+    public function __construct(UserRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
      * @param DataProviderContract $provider
      * @return array
      * @throws ValidationException
@@ -35,13 +50,12 @@ final class LoginHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        $user = $this->app->make(UserRepository::class)->byNameOrMobileOrEmailOrFail($provider->get($this->username()));
-
-        if (!Hash::check($provider->get('password'), $user->password)) {
-            throw new UnprocessableEntityException('name or password error');
-        }
+        $user = $this->repository->byNameOrMobileOrEmailOrFail($provider->get($this->username()));
 
         $appKey = $provider->get('app_key');
+
+        $this->checkPassword($user, $provider->get('password'));
+        $this->checkApplication($user, $appKey);
 
         $tokens = $this->app->make(CreateTask::class)->handle($user->id, $appKey);
 
@@ -55,7 +69,37 @@ final class LoginHandler extends AbstractHandler
      */
     public function username(): string
     {
-        return array_first(array_except(array_keys($this->config->get('passport.login_rules')), 'password'));
+        return Arr::first(Arr::except(array_keys($this->config->get('passport.login_rules')), 'password'));
+    }
+
+    /**
+     * @param UserModel $user
+     * @param string $appKey
+     *
+     * @throws PassportException
+     * @return void
+     */
+    protected function checkApplication(UserModel $user, string $appKey): void
+    {
+        $applications = $this->app->make(UserApplicationTask::class)->handle($user);
+
+        if (!$applications->contains('app_key', $appKey)) {
+            throw new PassportException('应用范围错误');
+        }
+    }
+
+    /**
+     * @param UserModel $user
+     * @param string $provider
+     *
+     * @throws PassportException
+     * @return void
+     */
+    protected function checkPassword(UserModel $user, string $password): void
+    {
+        if (!Hash::check($password, $user->password)) {
+            throw new PassportException('用户名或密码错误');
+        }
     }
 
     /**

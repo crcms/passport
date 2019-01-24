@@ -2,7 +2,9 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Microservice\Routing\Controller;
+//use CrCms\Microservice\Routing\Controller;
+use CrCms\Foundation\Helpers\InstanceConcern;
+use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\Handlers\CheckHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -17,22 +19,24 @@ use CrCms\Passport\DataProviders\LoginDataProvider;
  * Class AuthController
  * @package Micr
  */
-class AuthController extends Controller
+class AuthController
 {
+    use ResponseTrait, InstanceConcern;
+
     /**
      * @param LoginDataProvider $provider
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login(LoginDataProvider $provider)
     {
         $tokens = $this->app->make(LoginHandler::class)->handle($provider);
 
-        return $this->response->data($tokens);
+        return $this->response()->data($tokens);
     }
 
     /**
      * @param RegisterDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function register(RegisterDataProvider $provider)
     {
@@ -43,7 +47,7 @@ class AuthController extends Controller
 
     /**
      * @param TokenDataProvider $provider
-     * @return \CrCms\Microservice\Server\Http\Response
+     * @return mixed
      */
     public function check(TokenDataProvider $provider)
     {
@@ -54,7 +58,7 @@ class AuthController extends Controller
 
     /**
      * @param TokenDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function refresh(TokenDataProvider $provider)
     {
@@ -65,7 +69,7 @@ class AuthController extends Controller
 
     /**
      * @param TokenDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function user(TokenDataProvider $provider)
     {

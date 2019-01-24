@@ -9,6 +9,7 @@
 
 namespace CrCms\Passport\Listeners;
 
+use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
 use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Services\Behaviors\AbstractBehavior;
@@ -22,7 +23,7 @@ use Illuminate\Queue\InteractsWithQueue;
  */
 class BehaviorCreatedListener implements ShouldQueue
 {
-    use InteractsWithQueue;
+    use InteractsWithQueue, InstanceConcern;
 
     /**
      * @param BehaviorCreatedEvent $event
@@ -37,7 +38,7 @@ class BehaviorCreatedListener implements ShouldQueue
      */
     protected function userBehaviorRepository(): UserBehaviorRepository
     {
-        return app(UserBehaviorRepository::class);
+        return $this->app->make(UserBehaviorRepository::class);
     }
 
     /**

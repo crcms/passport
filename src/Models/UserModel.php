@@ -12,6 +12,7 @@ namespace CrCms\Passport\Models;
 use CrCms\Foundation\Models\Model;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\ForgetPasswordEvent;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -112,5 +113,13 @@ class UserModel extends Model
             ['ip' => app('request')->ip(), 'agent' => app('request')->userAgent()]
         ));
         //$this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function belongsToManyApplication(): BelongsToMany
+    {
+        return $this->belongsToMany(ApplicationModel::class, 'user_applications', 'user_id', 'app_key');
     }
 }

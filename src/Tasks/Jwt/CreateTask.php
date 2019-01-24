@@ -39,7 +39,7 @@ class CreateTask extends AbstractTask
         return $this->app->make(Builder::class)
             ->setIssuer($this->config->get('passport.issuer'))//签发人 Configures the issuer (iss claim)
             ->setAudience($appKey)//受众 Configures the audience (aud claim)
-            ->setId($id, true)//JTI编号 Configures the id (jti claim), replicating as a header item
+            ->setId(uniqid(), true)//JTI编号 Configures the id (jti claim), replicating as a header item
             ->setIssuedAt(time())//签发时间 Configures the time that the token was issue (iat claim)
             ->setNotBefore(time())//生效时间 Configures the time that the token can be used (nbf claim)
             ->setExpiration($expired)//过期时间 Configures the expiration time of the token (exp claim)

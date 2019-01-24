@@ -2,6 +2,8 @@
 
 namespace CrCms\Passport\Controllers;
 
+use CrCms\Foundation\Helpers\InstanceConcern;
+use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\DataProviders\User\DeleteDataProvider;
 use CrCms\Passport\DataProviders\User\IndexDataProvider;
 use CrCms\Passport\DataProviders\User\StoreDataProvider;
@@ -10,18 +12,20 @@ use CrCms\Passport\Handlers\User\DeleteHandler;
 use CrCms\Passport\Handlers\User\ListHandler;
 use CrCms\Passport\Handlers\User\StoreHandler;
 use CrCms\Passport\Handlers\User\UpdateHandler;
-use CrCms\Microservice\Routing\Controller;
+//use CrCms\Microservice\Routing\Controller;
 use CrCms\Passport\Resources\UserResource;
 
 /**
  * Class UserController
  * @package CrCms\Passport\Controllers
  */
-class UserController extends Controller
+class UserController
 {
+    use ResponseTrait, InstanceConcern;
+
     /**
      * @param IndexDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function index(IndexDataProvider $provider)
     {
@@ -32,7 +36,7 @@ class UserController extends Controller
 
     /**
      * @param StoreDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function store(StoreDataProvider $provider)
     {
@@ -43,7 +47,7 @@ class UserController extends Controller
 
     /**
      * @param UpdateDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function update(UpdateDataProvider $provider)
     {
@@ -54,7 +58,7 @@ class UserController extends Controller
 
     /**
      * @param DeleteDataProvider $provider
-     * @return \CrCms\Microservice\Server\Http\Response
+     * @return mixed
      */
     public function destroy(DeleteDataProvider $provider)
     {

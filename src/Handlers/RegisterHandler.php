@@ -26,17 +26,21 @@ final class RegisterHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        $user = $this->app->make(UserRepository::class)
-            ->setGuard(array_keys($this->config->get('passport.register_rules')))
-            ->create($provider->all());
-
         $appKey = $provider->get('app_key');
+        /* @var UserRepository $repository */
+        $repository = $this->app->make(UserRepository::class);
 
-        $tokens = $this->app->make(CreateTask::class)->handle($user->id, $appKey);
+        // create user
+        $user = $repository->setGuard($this->allowFields())->create($provider->all());
 
+        //bind application
+        $repository->bindApplication($user, $appKey);
+
+        // events
         $this->registeredEvent($provider, $user);
 
-        return $tokens;
+        // get tokens
+        return $this->app->make(CreateTask::class)->handle($user->id, $appKey);
     }
 
     /**
@@ -50,5 +54,13 @@ final class RegisterHandler extends AbstractHandler
             UserAttribute::AUTH_TYPE_REGISTER,
             ['ip' => $provider->get('ip', '0.0.0.0'), 'agent' => $provider->get('user_agent')]
         ));
+    }
+
+    /**
+     * @return array
+     */
+    protected function allowFields(): array
+    {
+        return array_merge(array_keys($this->config->get('passport.register_rules')), ['password']);
     }
 }

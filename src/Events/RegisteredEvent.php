@@ -8,7 +8,7 @@
  */
 
 namespace CrCms\Passport\Events;
-use CrCms\Passport\Models\UserModel;
+
 use Illuminate\Http\Request;
 
 /**

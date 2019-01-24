@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Providers;
 
-use CrCms\Foundation\ModuleServiceProvider;
+use CrCms\Foundation\Providers\ModuleServiceProvider;
 use CrCms\Passport\Commands\ApplicationListCommand;
 use CrCms\Passport\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
@@ -41,28 +41,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     /**
      * @return void
      */
-    protected function repositoryListener(): void
-    {
-        UserRepository::observer(UserListener::class);
-        UserBehaviorRepository::observer(UserBehaviorListener::class);
-    }
-
-    /**
-     * @return void
-     */
-    protected function map(): void
-    {
-        if (!$this->isRunningInMicroservice()) {
-            $this->mapWebRoutes();
-            $this->mapApiRoutes();
-        } else {
-            require $this->basePath . 'routes/service.php';
-        }
-    }
-
-    /**
-     * @return void
-     */
     public function boot(): void
     {
         parent::boot();
@@ -80,9 +58,28 @@ class PassportServiceProvider extends ModuleServiceProvider
     /**
      * @return void
      */
+    protected function repositoryListener(): void
+    {
+        UserRepository::observer(UserListener::class);
+        UserBehaviorRepository::observer(UserBehaviorListener::class);
+    }
+
+    /**
+     * @return void
+     */
+    protected function map(): void
+    {
+        if (env('APP_ENV') !== 'testing') {
+            require $this->basePath . 'routes/service.php';
+        }
+    }
+
+    /**
+     * @return void
+     */
     protected function listens()
     {
-        Event::listen(RegisteredEvent::class, RegisterMailListener::class);
+        //Event::listen(RegisteredEvent::class, RegisterMailListener::class);
         Event::listen(RegisteredEvent::class, BehaviorCreatedListener::class);
 
         Event::listen(ForgetPasswordEvent::class, ForgetPasswordMailListener::class);
@@ -100,13 +97,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     public function register(): void
     {
         parent::register();
-
-//        $this->app->register(AuthServiceProvider::class);
-//        $this->app->register(PasswordResetServiceProvider::class);
-//        $this->app->register(LaravelServiceProvider::class);
-
-//        $this->app->alias('auth',\Illuminate\Auth\AuthManager::class);
-//        $this->app->alias('auth',\Illuminate\Contracts\Auth\Factory::class);
 
         $this->app->bind(TokenContract::class, TokenRepository::class);
 

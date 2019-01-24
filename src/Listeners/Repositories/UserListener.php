@@ -11,7 +11,6 @@ namespace CrCms\Passport\Listeners\Repositories;
 
 use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Passport\Attributes\UserAttribute;
-use CrCms\Passport\Repositories\ApplicationRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,8 +30,7 @@ class UserListener
     {
         $newData = [];
         $newData['status'] = UserAttribute::STATUS_INACTIVATE;
-        //$newData['register_ip'] = app('request')->ip();
-        $newData['app_id'] = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($data['app_key'])->id;
+
         if (!empty($data['password'])) {
             $newData['password'] = Hash::make($data['password']);
         }
@@ -47,7 +45,6 @@ class UserListener
     public function updating(UserRepository $userRepository, array $data)
     {
         $storeData = $userRepository->getData();
-        unset($storeData['app_id']);
 
         $newData = [];
         if (!empty($data['password'])) {
