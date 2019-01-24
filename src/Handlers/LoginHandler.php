@@ -9,25 +9,38 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\LoginEvent;
-use CrCms\Passport\Handlers\Traits\Token;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Models\UserModel;
-use CrCms\Passport\Repositories\ApplicationRepository;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
+use CrCms\Passport\Repositories\UserRepository;
+use CrCms\Passport\Tasks\Jwt\CreateTask;
+use CrCms\Passport\Tasks\UserApplicationTask;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 /**
  * Class LoginHandler
  * @package CrCms\Passport\Actions
  */
-class LoginHandler extends AbstractHandler
+final class LoginHandler extends AbstractHandler
 {
-    use ThrottlesLogins, Token;
+    /**
+     * @var UserRepository
+     */
+    protected $repository;
+
+    /**
+     * LoginHandler constructor.
+     * @param UserRepository $repository
+     */
+    public function __construct(UserRepository $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * @param DataProviderContract $provider
@@ -37,32 +50,18 @@ class LoginHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        /* @todo Handler是不直接接收Request，这里是个特殊，为了直接使用Laravel自带的登录 */
-        $request = $this->app->make(Request::class);
+        $user = $this->repository->byNameOrMobileOrEmailOrFail($provider->get($this->username()));
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
+        $appKey = $provider->get('app_key');
 
-            return $this->throwLockout($request);
-        }
+        $this->checkPassword($user, $provider->get('password'));
+        $this->checkApplication($user, $appKey);
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        if (!$this->attemptLogin($request)) {
-            $this->incrementLoginAttempts($request);
-            return $this->throwLoginError();
-        }
+        $tokens = $this->app->make(CreateTask::class)->handle($user->id, $appKey);
 
-        $this->clearLoginAttempts($request);
+        $this->authenticatedEvent($provider, $user);
 
-        /* @var UserModel $user */
-        $user = $this->guard()->user();
-
-        return $this->authenticated($request, $provider->get('app_key'), $user);
+        return $tokens;
     }
 
     /**
@@ -70,86 +69,49 @@ class LoginHandler extends AbstractHandler
      */
     public function username(): string
     {
-        return array_first(array_except(array_keys($this->config->get('passport.login_rules')), 'password'));
+        return Arr::first(Arr::except(array_keys($this->config->get('passport.login_rules')), 'password'));
     }
 
     /**
-     * @return mixed
+     * @param UserModel $user
+     * @param string $appKey
+     *
+     * @throws PassportException
+     * @return void
      */
-    protected function attemptLogin(Request $request)
+    protected function checkApplication(UserModel $user, string $appKey): void
     {
-        return $this->guard()->attempt(
-            $this->credentials($request), true
-        );
+        $applications = $this->app->make(UserApplicationTask::class)->handle($user);
+
+        if (!$applications->contains('app_key', $appKey)) {
+            throw new PassportException('应用范围错误');
+        }
     }
 
     /**
-     * @throws ValidationException
+     * @param UserModel $user
+     * @param string $provider
+     *
+     * @throws PassportException
+     * @return void
      */
-    protected function throwLoginError()
+    protected function checkPassword(UserModel $user, string $password): void
     {
-        throw ValidationException::withMessages([
-            'failed' => trans('passport::auth.failed'),
-        ])->status(401);
+        if (!Hash::check($password, $user->password)) {
+            throw new PassportException('用户名或密码错误');
+        }
     }
 
     /**
-     * @param Request $request
+     * @param DataProviderContract $provider
      * @param UserModel $user
      */
-    protected function authenticatedEvent(Request $request, UserModel $user)
+    protected function authenticatedEvent(DataProviderContract $provider, UserModel $user)
     {
-        event(new LoginEvent(
+        $this->event->dispatch(new LoginEvent(
             $user,
             UserAttribute::AUTH_TYPE_LOGIN,
-            ['ip' => $request->ip(), 'agent' => $request->userAgent(), '_redirect' => $request->input('_redirect', '')]
+            ['ip' => $provider->get('ip', '0.0.0.0'), 'agent' => $provider->get('user_agent')]
         ));
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    protected function throwLockout(Request $request)
-    {
-        $seconds = $this->limiter()->availableIn(
-            $this->throttleKey($request)
-        );
-
-        throw ValidationException::withMessages([
-            'locked' => [Lang::get('passport::auth.throttle', ['seconds' => $seconds])],
-        ])->status(423);
-    }
-
-    /**
-     * Get the needed authorization credentials from the request.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return array
-     */
-    protected function credentials(Request $request)
-    {
-        /* @todo 这里要加上域判断，暂时只支持当前APP */
-        $app = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($request->input('app_key'));
-        return array_merge(array_only($request->all(), array_keys($this->config->get('passport.login_rules'))), ['app_id' => $app->id]);
-    }
-
-    /**
-     * @param Request $request
-     * @param string $appKey
-     * @param UserModel $user
-     * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    protected function authenticated(Request $request, string $appKey, UserModel $user): array
-    {
-        //event
-        $this->authenticatedEvent($request, $user);
-
-        //token
-        $tokens = $this->token()->new($this->application($appKey), $user);
-        return [
-            'jwt' => $this->jwt($this->jwtToken($appKey, $user, $tokens), $tokens['expired_at']),
-            'cookie' => $this->cookie($tokens['token'], $tokens['expired_at'])
-        ];
     }
 }

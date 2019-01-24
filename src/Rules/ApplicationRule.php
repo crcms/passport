@@ -2,7 +2,8 @@
 
 namespace CrCms\Passport\Rules;
 
-use CrCms\Foundation\App\Helpers\InstanceConcern;
+use CrCms\Foundation\Helpers\InstanceConcern;
+use CrCms\Foundation\Transporters\AbstractDataProvider;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\ApplicationAttribute;
 use CrCms\Passport\Repositories\ApplicationRepository;
@@ -23,12 +24,18 @@ class ApplicationRule implements Rule
     protected $repository;
 
     /**
+     * @var AbstractDataProvider
+     */
+    protected $data;
+
+    /**
      * ApplicationRule constructor.
      * @param ApplicationRepository $repository
      */
-    public function __construct(ApplicationRepository $repository)
+    public function __construct(ApplicationRepository $repository, DataProviderContract $dataProvider)
     {
         $this->repository = $repository;
+        $this->data = $dataProvider;
     }
 
     /**
@@ -39,7 +46,7 @@ class ApplicationRule implements Rule
     public function passes($attribute, $value): bool
     {
         try {
-            $application = $this->repository->byAppKeyOrFail($value);
+            $application = $this->repository->cache(10)->byAppKeyOrFail($value);
         } catch (ResourceNotFoundException $exception) {
             return false;
         }

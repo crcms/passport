@@ -9,19 +9,16 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\RegisteredEvent;
-use CrCms\Passport\Handlers\Traits\Token;
 use CrCms\Passport\Models\UserModel;
 use CrCms\Passport\Repositories\UserRepository;
-use Illuminate\Http\Request;
+use CrCms\Passport\Tasks\Jwt\CreateTask;
 
-class RegisterHandler extends AbstractHandler
+final class RegisterHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return array
@@ -29,44 +26,41 @@ class RegisterHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): array
     {
-        $user = $this->app->make(UserRepository::class)
-            ->setGuard(array_keys($this->config->get('passport.register_rules')))
-            ->create($provider->all());
+        $appKey = $provider->get('app_key');
+        /* @var UserRepository $repository */
+        $repository = $this->app->make(UserRepository::class);
 
-        return $this->registered($provider->get('app_key'), $user);
+        // create user
+        $user = $repository->setGuard($this->allowFields())->create($provider->all());
+
+        //bind application
+        $repository->bindApplication($user, $appKey);
+
+        // events
+        $this->registeredEvent($provider, $user);
+
+        // get tokens
+        return $this->app->make(CreateTask::class)->handle($user->id, $appKey);
     }
 
     /**
-     * @param Request $request
-     * @param string $appKey
+     * @param DataProviderContract $provider
      * @param UserModel $user
-     * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function registered(string $appKey, UserModel $user): array
+    protected function registeredEvent(DataProviderContract $provider, UserModel $user): void
     {
-        $this->registeredEvent($user);
-
-        $this->guard->login($user);
-
-        //token
-        $tokens = $this->token()->new($this->application($appKey), $user);
-        return [
-            'jwt' => $this->jwt($this->jwtToken($appKey, $user, $tokens), $tokens['expired_at']),
-            'cookie' => $this->cookie($tokens['token'], $tokens['expired_at'])
-        ];
-    }
-
-    /**
-     * @param Request $request
-     * @param UserModel $user
-     * @return void
-     */
-    protected function registeredEvent(UserModel $user): void
-    {
-        event(new RegisteredEvent(
+        $this->event->dispatch(new RegisteredEvent(
             $user,
-            UserAttribute::AUTH_TYPE_REGISTER
+            UserAttribute::AUTH_TYPE_REGISTER,
+            ['ip' => $provider->get('ip', '0.0.0.0'), 'agent' => $provider->get('user_agent')]
         ));
+    }
+
+    /**
+     * @return array
+     */
+    protected function allowFields(): array
+    {
+        return array_merge(array_keys($this->config->get('passport.register_rules')), ['password']);
     }
 }

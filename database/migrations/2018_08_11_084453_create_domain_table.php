@@ -13,7 +13,7 @@ class CreateDomainTable extends Migration
      */
     public function up()
     {
-        Schema::create('domains', function (Blueprint $table) {
+        Schema::create('passport_domains', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name',30)->default('')->comment('名称');
             $table->string('remark',255)->nullable()->comment('备注');
@@ -30,6 +30,6 @@ class CreateDomainTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('domains');
+        Schema::dropIfExists('passport_domains');
     }
 }

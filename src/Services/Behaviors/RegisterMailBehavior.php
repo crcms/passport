@@ -13,6 +13,7 @@ use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Models\UserBehaviorModel;
 use CrCms\Passport\Services\Behaviors\Contracts\BehaviorCheckContract;
 use CrCms\Passport\Services\Behaviors\Contracts\BehaviorCreateContract;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +32,7 @@ class RegisterMailBehavior extends AbstractBehavior implements BehaviorCreateCon
     {
         $extensions = [
             'user_id' => $this->user->id,
-            'expired_at' => now()->addHours(2)->getTimestamp(),
+            'expired_at' => Carbon::now()->addHours(2)->getTimestamp(),
             'secret' => Str::random(6),
         ];
 

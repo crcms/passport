@@ -9,8 +9,9 @@
 
 namespace CrCms\Passport\Repositories;
 
-use CrCms\Foundation\App\Repositories\AbstractRepository;
+use CrCms\Repository\AbstractRepository;
 use CrCms\Passport\Models\ApplicationModel;
+use Illuminate\Support\Collection;
 
 /**
  * Class ApplicationRepository
@@ -33,10 +34,21 @@ class ApplicationRepository extends AbstractRepository
 
     /**
      * @param string $key
+     *
      * @return ApplicationModel
      */
     public function byAppKeyOrFail(string $key): ApplicationModel
     {
         return $this->where('app_key', $key)->firstOrFail();
+    }
+
+    /**
+     * @param ApplicationModel $application
+     *
+     * @return Collection
+     */
+    public function domainsByApplication(ApplicationModel $application): Collection
+    {
+        return $application->belongsToManyDomain()->get();
     }
 }

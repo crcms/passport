@@ -9,7 +9,7 @@
 
 namespace CrCms\Passport\Tasks;
 
-use CrCms\Foundation\App\Tasks\AbstractTask;
+use CrCms\Foundation\Tasks\AbstractTask;
 use CrCms\Passport\Events\ForgetPasswordEvent;
 use DomainException;
 

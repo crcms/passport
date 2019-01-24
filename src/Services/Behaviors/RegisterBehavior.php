@@ -27,7 +27,7 @@ class RegisterBehavior extends AbstractBehavior implements BehaviorCreateContrac
     {
         $userBehavior = $this->userBehaviorRepository()->create([
             'user_id' => $this->user->id,
-            'type' => UserAttribute::AUTH_TYPE_LOGIN,
+            'type' => UserAttribute::AUTH_TYPE_REGISTER,
             'status' => UserAttribute::AUTH_STATUS_SUCCESS,
             'ip' => $data['ip'] ?? '0.0.0.0',
             'agent' => $data['agent'] ?? '',

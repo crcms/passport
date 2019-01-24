@@ -9,10 +9,13 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
-use CrCms\Passport\Handlers\Traits\Token;
+use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Models\UserModel;
+use CrCms\Passport\Repositories\UserRepository;
+use CrCms\Passport\Tasks\Jwt\CheckTask;
+use CrCms\Passport\Tasks\Jwt\ParserTask;
 
 /**
  * Class UserHandler
@@ -20,14 +23,26 @@ use CrCms\Passport\Models\UserModel;
  */
 class UserHandler extends AbstractHandler
 {
-    use Token;
-
     /**
      * @param DataProviderContract $provider
      * @return UserModel
      */
     public function handle(DataProviderContract $provider): UserModel
     {
-        return $this->guard()->user();
+        /* @var \Lcobucci\JWT\Token $token */
+        try {
+            $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
+        } catch (\Exception $exception) {
+            throw new PassportException($exception->getMessage());
+        }
+
+        if (
+            !$this->app->make(CheckTask::class)->handle($token) ||
+            $token->isExpired()
+        ) {
+            throw new PassportException('unauthorized');
+        }
+
+        return $this->app->make(UserRepository::class)->byIntIdOrFail($token->getClaim('uid'));
     }
 }

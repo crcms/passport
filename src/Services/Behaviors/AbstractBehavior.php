@@ -9,6 +9,7 @@
 
 namespace CrCms\Passport\Services\Behaviors;
 
+use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Models\UserBehaviorModel;
 use CrCms\Passport\Models\UserModel;
@@ -21,6 +22,8 @@ use Illuminate\Http\Request;
  */
 abstract class AbstractBehavior
 {
+    use InstanceConcern;
+
     /**
      * @var UserBehaviorRepository
      */
@@ -81,7 +84,7 @@ abstract class AbstractBehavior
     protected function userBehaviorRepository(): UserBehaviorRepository
     {
         if (!$this->userBehaviorRepository instanceof UserBehaviorRepository) {
-            $this->userBehaviorRepository = app(UserBehaviorRepository::class);
+            $this->userBehaviorRepository = $this->app->make(UserBehaviorRepository::class);
         }
 
         return $this->userBehaviorRepository;

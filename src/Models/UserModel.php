@@ -9,8 +9,10 @@
 
 namespace CrCms\Passport\Models;
 
+use CrCms\Foundation\Models\Model;
 use CrCms\Passport\Attributes\UserAttribute;
 use CrCms\Passport\Events\ForgetPasswordEvent;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,9 +22,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * Class UserModel
  * @package CrCms\Passport\Models
  */
-class UserModel extends Authenticatable implements JWTSubject
+class UserModel extends Model
 {
-    use SoftDeletes, Notifiable;
+    use SoftDeletes;
 
     /**
      * @var string
@@ -111,5 +113,13 @@ class UserModel extends Authenticatable implements JWTSubject
             ['ip' => app('request')->ip(), 'agent' => app('request')->userAgent()]
         ));
         //$this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function belongsToManyApplication(): BelongsToMany
+    {
+        return $this->belongsToMany(ApplicationModel::class, 'passport_user_applications', 'user_id', 'app_key');
     }
 }

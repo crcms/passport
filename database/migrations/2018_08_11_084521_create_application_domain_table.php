@@ -13,10 +13,10 @@ class CreateApplicationDomainTable extends Migration
      */
     public function up()
     {
-        Schema::create('applications_domains', function (Blueprint $table) {
-            $table->unsignedInteger('application_id')->default(0);
+        Schema::create('passport_applications_domains', function (Blueprint $table) {
+            $table->char('app_key', 10);
             $table->unsignedInteger('domain_id')->default(0);
-            $table->primary(['application_id', 'domain_id']);
+            $table->primary(['app_key', 'domain_id']);
         });
     }
 
@@ -27,6 +27,6 @@ class CreateApplicationDomainTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applications_domains');
+        Schema::dropIfExists('passport_applications_domains');
     }
 }

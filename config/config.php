@@ -1,6 +1,9 @@
 <?php
 
 return [
+
+    'issuer' => env('PASSPORT_ISSUER', 'passport'),
+
     /*
     |--------------------------------------------------------------------------
     | JWT time to live
@@ -16,7 +19,7 @@ return [
     |
     */
 
-    'ttl' => env('PASSPORT_TTL', 100),
+    'ttl' => env('PASSPORT_TTL', 120),
 
     /*
     |--------------------------------------------------------------------------
@@ -35,7 +38,10 @@ return [
     |
     */
 
-    'refresh_ttl' => env('PASSPORT_REFRESH_TTL', 20160),
+    //'refresh_ttl' => env('PASSPORT_REFRESH_TTL', 20160),
+
+
+    'secret' => env('PASSPORT_SECRET', env('APP_KEY','!@#r41T23^$')),
 
     /*
     |--------------------------------------------------------------------------

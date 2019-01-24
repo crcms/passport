@@ -2,7 +2,8 @@
 
 namespace CrCms\Passport\Models;
 
-use CrCms\Foundation\App\Models\Model;
+use CrCms\Foundation\Models\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class ApplicationModel
@@ -10,5 +11,31 @@ use CrCms\Foundation\App\Models\Model;
  */
 class ApplicationModel extends Model
 {
-    protected $table = 'applications';
+    /**
+     * @var string
+     */
+    protected $table = 'passport_applications';
+
+    /**
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * @var string
+     */
+    protected $primaryKey = 'app_key';
+
+    /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * @return BelongsToMany
+     */
+    public function belongsToManyDomain(): BelongsToMany
+    {
+        return $this->belongsToMany(DomainModel::class, 'passport_applications_domains', 'app_key', 'domain_id');
+    }
 }

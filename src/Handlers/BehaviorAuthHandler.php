@@ -9,9 +9,9 @@
 
 namespace CrCms\Passport\Handlers;
 
-use CrCms\Foundation\App\Handlers\AbstractHandler;
-use CrCms\Foundation\App\Handlers\Traits\RepositoryHandlerTrait;
-use CrCms\Foundation\App\Handlers\Traits\RequestHandlerTrait;
+use CrCms\Foundation\Handlers\AbstractHandler;
+use CrCms\Foundation\Handlers\Traits\RepositoryHandlerTrait;
+use CrCms\Foundation\Handlers\Traits\RequestHandlerTrait;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Services\Behaviors\AbstractBehavior;
 use CrCms\Passport\Services\Behaviors\BehaviorFactory;

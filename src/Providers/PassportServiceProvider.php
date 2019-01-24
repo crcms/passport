@@ -2,7 +2,7 @@
 
 namespace CrCms\Passport\Providers;
 
-use CrCms\Foundation\App\Providers\ModuleServiceProvider;
+use CrCms\Foundation\Providers\ModuleServiceProvider;
 use CrCms\Passport\Commands\ApplicationListCommand;
 use CrCms\Passport\Commands\CreateApplicationCommand;
 use CrCms\Passport\Events\BehaviorCreatedEvent;
@@ -21,9 +21,6 @@ use CrCms\Passport\Repositories\UserBehaviorRepository;
 use CrCms\Passport\Repositories\UserRepository;
 use CrCms\Passport\Repositories\Contracts\TokenContract;
 use Illuminate\Support\Facades\Event;
-use Tymon\JWTAuth\Providers\LaravelServiceProvider;
-use Illuminate\Auth\AuthServiceProvider;
-use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
 
 /**
  * Class PassportServiceProvider
@@ -44,15 +41,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     /**
      * @return void
      */
-    protected function repositoryListener(): void
-    {
-        UserRepository::observer(UserListener::class);
-        UserBehaviorRepository::observer(UserBehaviorListener::class);
-    }
-
-    /**
-     * @return void
-     */
     public function boot(): void
     {
         parent::boot();
@@ -62,9 +50,28 @@ class PassportServiceProvider extends ModuleServiceProvider
             $this->basePath . 'resources/lang' => resource_path("lang/vendor/{$this->name}"),
         ]);
 
-        $this->loadViewsFrom($this->basePath . '/resources/views', $this->name);
-
         $this->listens();
+
+        $this->repositoryListener();
+    }
+
+    /**
+     * @return void
+     */
+    protected function repositoryListener(): void
+    {
+        UserRepository::observer(UserListener::class);
+        UserBehaviorRepository::observer(UserBehaviorListener::class);
+    }
+
+    /**
+     * @return void
+     */
+    protected function map(): void
+    {
+        if (env('APP_ENV') !== 'testing') {
+            require $this->basePath . 'routes/service.php';
+        }
     }
 
     /**
@@ -72,7 +79,7 @@ class PassportServiceProvider extends ModuleServiceProvider
      */
     protected function listens()
     {
-        Event::listen(RegisteredEvent::class, RegisterMailListener::class);
+        //Event::listen(RegisteredEvent::class, RegisterMailListener::class);
         Event::listen(RegisteredEvent::class, BehaviorCreatedListener::class);
 
         Event::listen(ForgetPasswordEvent::class, ForgetPasswordMailListener::class);
@@ -90,10 +97,6 @@ class PassportServiceProvider extends ModuleServiceProvider
     public function register(): void
     {
         parent::register();
-
-        $this->app->register(AuthServiceProvider::class);
-        $this->app->register(PasswordResetServiceProvider::class);
-        $this->app->register(LaravelServiceProvider::class);
 
         $this->app->bind(TokenContract::class, TokenRepository::class);
 
