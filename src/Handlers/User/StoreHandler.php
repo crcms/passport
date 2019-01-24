@@ -19,6 +19,16 @@ final class StoreHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): UserModel
     {
-        return $this->app->make(UserRepository::class)->create($provider->all());
+        $appKey = $provider->get('app_key');
+        /* @var UserRepository $repository */
+        $repository = $this->app->make(UserRepository::class);
+
+        /* @var UserModel $user */
+        $user = $repository->create($provider->all());
+
+        //bind application
+        $repository->bindApplication($user, $appKey);
+
+        return $user;
     }
 }
