@@ -16,6 +16,10 @@ $app->alias('queue', \Illuminate\Contracts\Queue\Factory::class);
 $app->alias('queue', \Illuminate\Contracts\Queue\Monitor::class);
 $app->alias('events', \Illuminate\Contracts\Events\Dispatcher::class);
 $app->alias('events', \Illuminate\Events\Dispatcher::class);
+$app->alias('cache', \Illuminate\Cache\CacheManager::class);
+$app->alias('cache', \Illuminate\Contracts\Cache\Factory::class);
+$app->alias('cache.store', \Illuminate\Cache\Repository::class);
+$app->alias('cache.store',  \Illuminate\Contracts\Cache\Repository::class);
 
 //config
 $app->singleton('config', function () use ($config) {
@@ -57,6 +61,30 @@ $app->singleton('config', function () use ($config) {
                     'driver' => 'sync',
                 ],
             ]
+        ],
+        'cache' => [
+
+            'default' => env('CACHE_DRIVER', 'file'),
+
+
+            'stores' => [
+
+                'array' => [
+                    'driver' => 'array',
+                ],
+
+
+                'file' => [
+                    'driver' => 'file',
+                    'path' => __DIR__.'/cache',
+                ],
+
+            ],
+
+
+            'prefix' => 'passport_testing',
+
+
         ]
     ]);
 });
@@ -105,6 +133,7 @@ $providers = [
     \Illuminate\Filesystem\FilesystemServiceProvider::class,
     \Illuminate\Translation\TranslationServiceProvider::class,
     \Illuminate\Bus\BusServiceProvider::class,
+    \Illuminate\Cache\CacheServiceProvider::class,
     \Illuminate\Database\MigrationServiceProvider::class,
     \CrCms\Repository\RepositoryServiceProvider::class,
     \CrCms\Passport\Providers\PassportServiceProvider::class,

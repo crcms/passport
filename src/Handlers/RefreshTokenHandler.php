@@ -15,6 +15,7 @@ use CrCms\Passport\Exceptions\PassportException;
 use CrCms\Passport\Tasks\Jwt\CheckTask;
 use CrCms\Passport\Tasks\Jwt\CreateTask;
 use CrCms\Passport\Tasks\Jwt\ParserTask;
+use Lcobucci\JWT\Token;
 use Exception;
 
 /**
@@ -30,6 +31,7 @@ final class RefreshTokenHandler extends AbstractHandler
     public function handle(DataProviderContract $provider): array
     {
         try {
+            /* @var Token $token */
             $token = $this->app->make(ParserTask::class)->handle($provider->get('token'));
         } catch (Exception $exception) {
             throw new PassportException($exception->getMessage());
@@ -45,9 +47,8 @@ final class RefreshTokenHandler extends AbstractHandler
         );
 
         // 加入黑名单
-//        $this->cache->forever()
+        $this->cache->forever($token->getClaim('jti'), 1);
 
         return $tokens;
-
     }
 }
