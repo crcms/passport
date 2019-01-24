@@ -120,6 +120,6 @@ class UserModel extends Model
      */
     public function belongsToManyApplication(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicationModel::class, 'user_applications', 'user_id', 'app_key');
+        return $this->belongsToMany(ApplicationModel::class, 'passport_user_applications', 'user_id', 'app_key');
     }
 }

@@ -14,7 +14,7 @@ class ApplicationModel extends Model
     /**
      * @var string
      */
-    protected $table = 'applications';
+    protected $table = 'passport_applications';
 
     /**
      * @var string
@@ -36,6 +36,6 @@ class ApplicationModel extends Model
      */
     public function belongsToManyDomain(): BelongsToMany
     {
-        return $this->belongsToMany(DomainModel::class, 'applications_domains', 'app_key', 'domain_id');
+        return $this->belongsToMany(DomainModel::class, 'passport_applications_domains', 'app_key', 'domain_id');
     }
 }

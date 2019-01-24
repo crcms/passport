@@ -33,7 +33,7 @@ class UserApplicationTaskTest extends TestCase
 
         $this->assertInstanceOf(Collection::class,$result);
 
-        $this->assertEquals(DB::table('applications_domains')->count(),$result->count());
+        $this->assertEquals(DB::table('passport_applications_domains')->count(),$result->count());
     }
 
     protected function createDomainAndApplication(UserModel $user)

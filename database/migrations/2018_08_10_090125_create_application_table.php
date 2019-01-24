@@ -13,7 +13,7 @@ class CreateApplicationTable extends Migration
      */
     public function up()
     {
-        Schema::create('applications', function (Blueprint $table) {
+        Schema::create('passport_applications', function (Blueprint $table) {
             $table->char('app_key', 10)->comment('应用KEY');
             $table->char('app_secret', 40)->default('')->comment('应用密匙');
             $table->unsignedTinyInteger('status')->default(0)->commet('状态，1正常，2禁止');
@@ -33,6 +33,6 @@ class CreateApplicationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applications');
+        Schema::dropIfExists('passport_applications');
     }
 }

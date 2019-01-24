@@ -14,13 +14,13 @@ class DomainModel extends Model
     /**
      * @var string
      */
-    protected $table = 'domains';
+    protected $table = 'passport_domains';
 
     /**
      * @return BelongsToMany
      */
     public function belongsToManyApplication(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicationModel::class, 'applications_domains', 'domain_id', 'app_key');
+        return $this->belongsToMany(ApplicationModel::class, 'passport_applications_domains', 'domain_id', 'app_key');
     }
 }
