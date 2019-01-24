@@ -14,7 +14,7 @@ class DeleteDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            'app_key' => ['required', Rule::exists(ApplicationModel::getTable(), 'app_key')],
             'id' => 'required|exists:passport_users',
         ];
     }

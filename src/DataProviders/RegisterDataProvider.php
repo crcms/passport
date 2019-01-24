@@ -26,6 +26,7 @@ class RegisterDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => ['required', $this->app->make(ApplicationRule::class)],
+            'app_secret' => ['required'],
             'password' => 'required|string|min:6',
             'ip' => ['ip'],
         ];
@@ -40,6 +41,7 @@ class RegisterDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => trans('passport::app.auth.app_key'),
+            'app_secret' => trans('passport::app.auth.app_secret'),
             'password' => trans('passport::app.auth.password'),
         ];
 

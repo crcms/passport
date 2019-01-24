@@ -24,7 +24,8 @@ class TokenDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => ['required', app(ApplicationRule::class)],
+            'app_key' => ['required', $this->app->make(ApplicationRule::class)],
+            'app_secret' => ['required'],
             'token' => ['required',]
         ];
     }
@@ -36,6 +37,7 @@ class TokenDataProvider extends AbstractValidateDataProvider
     {
         return [
             'app_key' => trans('passport::app.auth.app_key'),
+            'app_secret' => trans('passport::app.auth.app_secret'),
             'token' => trans('passport::app.auth.token'),
         ];
     }

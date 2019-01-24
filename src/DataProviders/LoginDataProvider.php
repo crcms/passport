@@ -19,6 +19,7 @@ class LoginDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => ['required', $this->app->make(ApplicationRule::class)],
+            'app_secret' => ['required'],
             'ip' => ['ip'],
         ];
 
@@ -32,6 +33,7 @@ class LoginDataProvider extends AbstractValidateDataProvider
     {
         $defaults = [
             'app_key' => trans('passport::app.auth.app_key'),
+            'app_secret' => trans('passport::app.auth.app_secret'),
         ];
 
         $attributes = Collection::make(config('passport.login_rules'))->keys()->mapWithKeys(function ($key) {

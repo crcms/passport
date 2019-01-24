@@ -19,7 +19,7 @@ class StoreDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => ['required', Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            'app_key' => ['required', Rule::exists(ApplicationModel::getTable(), 'app_key')],
             'name' => 'required|string|max:15|unique:passport_users',
             'mobile' => 'required|string|max:11|min:11|unique:passport_users',
             'password' => 'required|min:6',

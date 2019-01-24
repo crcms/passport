@@ -18,7 +18,7 @@ class IndexDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => [Rule::exists((new ApplicationModel())->getTable(), 'app_key')],
+            'app_key' => [Rule::exists(ApplicationModel::getTable(), 'app_key')],
         ];
     }
 
