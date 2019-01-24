@@ -2,8 +2,7 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Foundation\Helpers\InstanceConcern;
-use CrCms\Foundation\Services\ResponseTrait;
+use CrCms\Microservice\Routing\Controller;
 use CrCms\Passport\DataProviders\User\DeleteDataProvider;
 use CrCms\Passport\DataProviders\User\IndexDataProvider;
 use CrCms\Passport\DataProviders\User\StoreDataProvider;
@@ -18,10 +17,8 @@ use CrCms\Passport\Resources\UserResource;
  * Class UserController
  * @package CrCms\Passport\Controllers
  */
-class UserController
+class UserController extends Controller
 {
-    use ResponseTrait, InstanceConcern;
-
     /**
      * @param IndexDataProvider $provider
      * @return mixed
