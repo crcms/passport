@@ -19,7 +19,7 @@ class UpdateDataProvider extends AbstractValidateDataProvider
     public function rules(): array
     {
         return [
-            'app_key' => ['required', Rule::exists(ApplicationModel::getTable(), 'app_key')],
+            'app_key' => ['required', Rule::exists((new ApplicationModel)->getTable(), 'app_key')],
             'mobile' => ['size:11', Rule::unique('passport_users')->ignore($this->input('id'), 'id')],
             'password' => ['min:6'],
             'status' => ['required', 'integer', Rule::in(array_keys(UserAttribute::getStaticTransform(UserAttribute::KEY_STATUS)))]
