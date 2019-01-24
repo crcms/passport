@@ -41,7 +41,7 @@ return [
     //'refresh_ttl' => env('PASSPORT_REFRESH_TTL', 20160),
 
 
-    'secret' => env('PASSPORT_SECRET', '!@#123^yu'),
+    'secret' => env('PASSPORT_SECRET', env('APP_KEY','!@#r41T23^$')),
 
     /*
     |--------------------------------------------------------------------------
