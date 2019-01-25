@@ -22,7 +22,7 @@ class UserRepository extends AbstractRepository
     /**
      * @var array
      */
-    protected $guard = ['name', 'email', 'password', 'mobile', 'app_id'];
+    protected $guard = ['name', 'email', 'password', 'mobile'];
 
     /**
      * @return UserModel
