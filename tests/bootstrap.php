@@ -49,14 +49,6 @@ $app->singleton('config', function () use ($config) {
                     'strict' => true,
                     'engine' => null,
                 ],
-
-//                'sqlite' => [
-//                    'driver' => 'sqlite',
-//                    'database' => __DIR__.'/database.sqlite',
-//                    'prefix' => '',
-//                    'foreign_key_constraints' => true,
-//                ],
-
             ],
         ],
         'queue' => [
