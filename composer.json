@@ -12,7 +12,7 @@
         "crcms/foundation": "dev-master",
         "crcms/repository": "^2.1",
         "illuminate/translation": "5.7.*",
-        "illuminate/contracts": "5.7.*",
+        "illuminate/container": "5.7.*",
         "illuminate/support": "5.7.*",
         "illuminate/events": "5.7.*",
         "illuminate/config": "5.7.*",
