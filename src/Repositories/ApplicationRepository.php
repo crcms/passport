@@ -11,6 +11,7 @@ namespace CrCms\Passport\Repositories;
 
 use CrCms\Repository\AbstractRepository;
 use CrCms\Passport\Models\ApplicationModel;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -50,5 +51,16 @@ class ApplicationRepository extends AbstractRepository
     public function domainsByApplication(ApplicationModel $application): Collection
     {
         return $application->belongsToManyDomain()->get();
+    }
+
+    /**
+     * applicationUserPaginate
+     *
+     * @param ApplicationModel $application
+     * @return LengthAwarePaginator
+     */
+    public function applicationUserPaginate(ApplicationModel $application): LengthAwarePaginator
+    {
+        return $application->belongsToManyUser()->orderBy('id', 'desc')->paginate();
     }
 }

@@ -5,7 +5,6 @@ namespace CrCms\Passport\Handlers\User;
 use CrCms\Foundation\Handlers\AbstractHandler;
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Passport\Repositories\ApplicationRepository;
-use CrCms\Passport\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\Paginator;
 
 /**
@@ -20,11 +19,11 @@ final class ListHandler extends AbstractHandler
      */
     public function handle(DataProviderContract $provider): Paginator
     {
-        $app = $this->app->make(ApplicationRepository::class)->byAppKeyOrFail($provider->get('app_key'));
+        /* @var ApplicationRepository $repository */
+        $repository = $this->app->make(ApplicationRepository::class);
 
-        return $this->app->make(UserRepository::class)
-            ->where('app_id', $app->id)
-            ->orderBy('id', 'desc')
-            ->paginate();
+        $app = $repository->byAppKeyOrFail($provider->get('app_key'));
+
+        return $repository->applicationUserPaginate($app);
     }
 }

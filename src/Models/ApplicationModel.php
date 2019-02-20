@@ -38,4 +38,14 @@ class ApplicationModel extends Model
     {
         return $this->belongsToMany(DomainModel::class, 'passport_applications_domains', 'app_key', 'domain_id');
     }
+
+    /**
+     * belongsToManyUser
+     *
+     * @return BelongsToMany
+     */
+    public function belongsToManyUser(): BelongsToMany
+    {
+        return $this->belongsToMany(UserModel::class, 'passport_user_applications', 'app_key', 'user_id');
+    }
 }
