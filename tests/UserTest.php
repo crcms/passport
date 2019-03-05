@@ -84,7 +84,8 @@ class UserTest extends TestCase
     {
         $listHandler = new ListHandler();
         $result = $listHandler->handle(new DataProvider([
-            'app_key' => $appKey
+            'app_key' => $appKey,
+            'page' => 1,
         ]));
 
         $this->assertInstanceOf(Paginator::class,$result);

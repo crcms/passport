@@ -24,6 +24,6 @@ final class ListHandler extends AbstractHandler
 
         $app = $repository->byAppKeyOrFail($provider->get('app_key'));
 
-        return $repository->applicationUserPaginate($app);
+        return $repository->applicationUserPaginate($app, $provider->get('page', 1));
     }
 }

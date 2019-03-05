@@ -57,10 +57,11 @@ class ApplicationRepository extends AbstractRepository
      * applicationUserPaginate
      *
      * @param ApplicationModel $application
+     * @param int $currentPage
      * @return LengthAwarePaginator
      */
-    public function applicationUserPaginate(ApplicationModel $application): LengthAwarePaginator
+    public function applicationUserPaginate(ApplicationModel $application,int $currentPage): LengthAwarePaginator
     {
-        return $application->belongsToManyUser()->orderBy('id', 'desc')->paginate();
+        return $application->belongsToManyUser()->orderBy('id', 'desc')->paginate(null, ['*'], 'page', $currentPage);
     }
 }
