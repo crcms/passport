@@ -4,12 +4,12 @@
 	"keywords": ["passport", "crcms", "laravel", "php"],
 	"homepage": "https://github.com/crcms/passport",
     "license": "MIT",
-    "type": "crcms-module",
+    "type": "library",
     "require": {
         "php":">=7.2.4",
         "ext-curl":"*",
         "lcobucci/jwt": "^3.2",
-        "crcms/foundation": "dev-master",
+        "crcms/foundation": "^0.0.1",
         "crcms/repository": "^2.1",
         "illuminate/translation": "^5.7",
         "illuminate/container": "^5.7",
@@ -31,7 +31,8 @@
         "fzaninotto/faker": "^1.4",
         "phpunit/phpunit": "^7.4",
         "mockery/mockery": "^1.0",
-        "vlucas/phpdotenv": "^3.3"
+        "vlucas/phpdotenv": "^3.3 | ^2.2",
+        "crcms/microservice-dispatching": "dev-master"
     },
 	"autoload": {
         "classmap": [

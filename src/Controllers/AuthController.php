@@ -2,7 +2,8 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Microservice\Routing\Controller;
+use CrCms\Foundation\Helpers\InstanceConcern;
+use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\Handlers\CheckHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -17,8 +18,10 @@ use CrCms\Passport\DataProviders\LoginDataProvider;
  * Class AuthController
  * @package Micr
  */
-class AuthController extends Controller
+class AuthController
 {
+    use InstanceConcern, ResponseTrait;
+
     /**
      * @param LoginDataProvider $provider
      * @return \Illuminate\Http\JsonResponse
@@ -27,7 +30,7 @@ class AuthController extends Controller
     {
         $tokens = $this->app->make(LoginHandler::class)->handle($provider);
 
-        return $this->response->data($tokens);
+        return $this->response()->data($tokens);
     }
 
     /**
@@ -38,7 +41,7 @@ class AuthController extends Controller
     {
         $tokens = $this->app->make(RegisterHandler::class)->handle($provider);
 
-        return $this->response->data($tokens);
+        return $this->response()->data($tokens);
     }
 
     /**

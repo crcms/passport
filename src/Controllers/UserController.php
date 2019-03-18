@@ -2,7 +2,8 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Microservice\Routing\Controller;
+use CrCms\Foundation\Helpers\InstanceConcern;
+use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\DataProviders\User\DeleteDataProvider;
 use CrCms\Passport\DataProviders\User\IndexDataProvider;
 use CrCms\Passport\DataProviders\User\ShowDataProvider;
@@ -19,8 +20,10 @@ use CrCms\Passport\Resources\UserResource;
  * Class UserController
  * @package CrCms\Passport\Controllers
  */
-class UserController extends Controller
+class UserController
 {
+    use InstanceConcern, ResponseTrait;
+
     /**
      * @param IndexDataProvider $provider
      * @return mixed
@@ -29,7 +32,7 @@ class UserController extends Controller
     {
         $paginate = $this->app->make(ListHandler::class)->handle($provider);
 
-        return $this->response->paginator($paginate, UserResource::class);
+        return $this->response()->paginator($paginate, UserResource::class);
     }
 
     /**
@@ -42,7 +45,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(ShowHandler::class)->handle($provider);
 
-        return $this->response->resource($model, UserResource::class);
+        return $this->response()->resource($model, UserResource::class);
     }
 
     /**
@@ -53,7 +56,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(StoreHandler::class)->handle($provider);
 
-        return $this->response->resource($model, UserResource::class);
+        return $this->response()->resource($model, UserResource::class);
     }
 
     /**
@@ -64,7 +67,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(UpdateHandler::class)->handle($provider);
 
-        return $this->response->resource($model, UserResource::class);
+        return $this->response()->resource($model, UserResource::class);
     }
 
     /**
@@ -75,6 +78,6 @@ class UserController extends Controller
     {
         $row = $this->app->make(DeleteHandler::class)->handle($provider);
 
-        return $this->response->noContent();
+        return $this->response()->noContent();
     }
 }
