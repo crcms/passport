@@ -2,8 +2,6 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Foundation\Helpers\InstanceConcern;
-use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\Handlers\CheckHandler;
 use CrCms\Passport\Handlers\LoginHandler;
 use CrCms\Passport\Handlers\RefreshTokenHandler;
@@ -13,15 +11,14 @@ use CrCms\Passport\DataProviders\RegisterDataProvider;
 use CrCms\Passport\DataProviders\TokenDataProvider;
 use CrCms\Passport\Resources\UserResource;
 use CrCms\Passport\DataProviders\LoginDataProvider;
+use CrCms\Microservice\Dispatching\Controller;
 
 /**
  * Class AuthController
  * @package Micr
  */
-class AuthController
+class AuthController extends Controller
 {
-    use InstanceConcern, ResponseTrait;
-
     /**
      * @param LoginDataProvider $provider
      * @return \Illuminate\Http\JsonResponse

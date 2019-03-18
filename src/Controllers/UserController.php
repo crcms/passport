@@ -2,8 +2,6 @@
 
 namespace CrCms\Passport\Controllers;
 
-use CrCms\Foundation\Helpers\InstanceConcern;
-use CrCms\Foundation\Services\ResponseTrait;
 use CrCms\Passport\DataProviders\User\DeleteDataProvider;
 use CrCms\Passport\DataProviders\User\IndexDataProvider;
 use CrCms\Passport\DataProviders\User\ShowDataProvider;
@@ -15,15 +13,14 @@ use CrCms\Passport\Handlers\User\ShowHandler;
 use CrCms\Passport\Handlers\User\StoreHandler;
 use CrCms\Passport\Handlers\User\UpdateHandler;
 use CrCms\Passport\Resources\UserResource;
+use CrCms\Microservice\Dispatching\Controller;
 
 /**
  * Class UserController
  * @package CrCms\Passport\Controllers
  */
-class UserController
+class UserController extends Controller
 {
-    use InstanceConcern, ResponseTrait;
-
     /**
      * @param IndexDataProvider $provider
      * @return mixed
