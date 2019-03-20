@@ -9,29 +9,30 @@
 
 namespace CrCms\Passport\Resources;
 
-use CrCms\Foundation\Resources\Resource;
+use CrCms\Microservice\Dispatching\AbstractTransformer;
+use CrCms\Passport\Models\UserModel;
 
 /**
  * Class UserResource
  * @package CrCms\Passport\Resources
  */
-class UserResource extends Resource
+class UserResource extends AbstractTransformer
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param UserModel $model
      * @return array
      */
-    public function toArray($request): array
+    public function toArray(UserModel $model): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'nickname' => $this->nickname,
-            'email' => $this->email,
-            'mobile' => $this->mobile,
-            'status' => $this->status,
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
+            'id' => $model->id,
+            'name' => $model->name,
+            'nickname' => $model->nickname,
+            'email' => $model->email,
+            'mobile' => $model->mobile,
+            'status' => $model->status,
+            'created_at' => $model->created_at->toDateTimeString(),
+            'updated_at' => $model->updated_at->toDateTimeString(),
         ];
     }
 }

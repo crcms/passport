@@ -21,35 +21,35 @@ class AuthController extends Controller
 {
     /**
      * @param LoginDataProvider $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     public function login(LoginDataProvider $provider)
     {
         $tokens = $this->app->make(LoginHandler::class)->handle($provider);
 
-        return $this->response()->data($tokens);
+        return $this->transform()->data($tokens);
     }
 
     /**
      * @param RegisterDataProvider $provider
-     * @return mixed
+     * @return array
      */
     public function register(RegisterDataProvider $provider)
     {
         $tokens = $this->app->make(RegisterHandler::class)->handle($provider);
 
-        return $this->response()->data($tokens);
+        return $this->transform()->data($tokens);
     }
 
     /**
      * @param TokenDataProvider $provider
-     * @return mixed
+     * @return array
      */
     public function check(TokenDataProvider $provider)
     {
         $this->app->make(CheckHandler::class)->handle($provider);
 
-        return $this->response->noContent();
+        return $this->transform()->noContent();
     }
 
     /**
@@ -60,7 +60,7 @@ class AuthController extends Controller
     {
         $tokens = $this->app->make(RefreshTokenHandler::class)->handle($provider);
 
-        return $this->response->data($tokens);
+        return $this->transform()->data($tokens);
     }
 
     /**
@@ -71,6 +71,6 @@ class AuthController extends Controller
     {
         $user = $this->app->make(UserHandler::class)->handle($provider);
 
-        return $this->response->resource($user, UserResource::class);
+        return $this->transform()->resource($user, UserResource::class);
     }
 }

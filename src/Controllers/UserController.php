@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $paginate = $this->app->make(ListHandler::class)->handle($provider);
 
-        return $this->response()->paginator($paginate, UserResource::class);
+        return $this->transform()->paginator($paginate, UserResource::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(ShowHandler::class)->handle($provider);
 
-        return $this->response()->resource($model, UserResource::class);
+        return $this->transform()->resource($model, UserResource::class);
     }
 
     /**
@@ -53,7 +53,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(StoreHandler::class)->handle($provider);
 
-        return $this->response()->resource($model, UserResource::class);
+        return $this->transform()->resource($model, UserResource::class);
     }
 
     /**
@@ -64,7 +64,7 @@ class UserController extends Controller
     {
         $model = $this->app->make(UpdateHandler::class)->handle($provider);
 
-        return $this->response()->resource($model, UserResource::class);
+        return $this->transform()->resource($model, UserResource::class);
     }
 
     /**
@@ -75,6 +75,6 @@ class UserController extends Controller
     {
         $row = $this->app->make(DeleteHandler::class)->handle($provider);
 
-        return $this->response()->noContent();
+        return $this->transform()->noContent();
     }
 }
