@@ -9,7 +9,7 @@
         "php":">=7.2.4",
         "ext-curl":"*",
         "lcobucci/jwt": "^3.2",
-        "crcms/foundation": "^0.0.1",
+        "crcms/foundation": "^0.0",
         "crcms/repository": "^2.1",
         "illuminate/translation": "^5.7",
         "illuminate/container": "^5.7",
