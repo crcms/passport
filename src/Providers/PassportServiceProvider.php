@@ -53,6 +53,8 @@ class PassportServiceProvider extends ModuleServiceProvider
         $this->listens();
 
         $this->repositoryListener();
+
+        require $this->basePath.'routes/service.php';
     }
 
     /**
